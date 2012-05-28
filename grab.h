@@ -3,6 +3,49 @@
 
 #include "../CImg/CImg.h"
 
+/*
+class Cgrab //base class
+{
+virtualS
+  //! Open grab device
+  /** 
+   *
+   * @param[in] device_path_name: path of camera (e.g. 168.0.0.9)
+   *
+   * @return 
+   * /
+  bool open(const std::string& device_path_name)
+  {
+#if cimg_debug>1
+std::cerr<<class_name<<"::"<<__func__<<"("<<device_path_name<<")\n"<<std::flush;
+#endif
+    ///check \c device_path validity
+    if(device_path_name.empty()) return false;
+    device_path=device_path_name;
+    return true;
+  }//open
+
+  //! grab one image
+  /** 
+   *
+   * @param[in] message= string to send to serial port  
+   *
+   * @return 
+   * /
+  template<typename T>
+  bool grab(cimg_library::CImg<T> &image,const std::string &image_path)
+  {
+#if cimg_debug>1
+std::cerr<<class_name<<"::"<<__func__<<"(CImg<"<<image.pixel_type()<<">,"<<image_path<<")\n"<<std::flush;
+#endif
+    ///load image in CImg
+    image.load(image_path.c_str());
+    return true;
+  }//grab
+
+}//Cgrab
+*/
+
 class Cgrab
 {
 public:
@@ -47,6 +90,7 @@ std::cerr<<class_name<<"::"<<__func__<<"("<<device_path_name<<")\n"<<std::flush;
 #if cimg_debug>1
 std::cerr<<class_name<<"::"<<__func__<<"/device_path_wget=\""<<device_path_wget<<"\"\n"<<std::flush;
 #endif
+/*
     ///check device validity
     int error=std::system(device_path_wget.c_str());
     if(error!=0)
@@ -63,6 +107,7 @@ std::cerr<<class_name<<"::"<<__func__<<"/device_path_wget=\""<<device_path_wget<
     }
     ///print availability
     std::cerr<<"device is available."<<std::endl;
+*/
     return true;
   }//open
   
@@ -79,6 +124,7 @@ std::cerr<<class_name<<"::"<<__func__<<"/device_path_wget=\""<<device_path_wget<
 #if cimg_debug>1
 std::cerr<<class_name<<"::"<<__func__<<": use system command execution (i.e. std::system() )\n"<<std::flush;
 #endif
+/*
     ///get image
     int error=std::system(device_path_wget.c_str());
     if(error!=0)
@@ -93,10 +139,11 @@ std::cerr<<class_name<<"::"<<__func__<<": use system command execution (i.e. std
       std::cerr<<"error: Unable to move image from bimg to "<<image_path<<" (i.e. std::system error code="<<error<<").\n";//e.g. mv bimg ...
       return false;
     }
+*/
     ///load image in CImg
     image.load(image_path.c_str());
     return true;
-  }//move
+  }//grab
 
   //! Close grab
   /** 

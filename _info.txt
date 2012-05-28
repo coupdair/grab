@@ -12,4 +12,5 @@ git commit -a
 
 #run
 ##run Elphel_wget
-./grab --message "*IDN?"
+./grab -o image_000.jpg
+
