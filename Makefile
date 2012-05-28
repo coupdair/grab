@@ -19,7 +19,7 @@ doc: grab.Doxygen grab.cpp grab.h
 	./doxIt.sh
 
 clean:
-	rm -rf $(DOCUMENTATIONS)
+	rm -rf $(DOCUMENTATIONS)/*
 	rm -f *.o
 	rm -rf .libs
 	@list='$(PROGRAMS)'; for p in $$list; do \

@@ -1,30 +1,24 @@
-stepper
+grab
 
-C++ classes to handle stepper for translation.
+C++ classes to handle image grabbing for translation.
 
 additional library needed:
-* CImg for command line option (and CImg for XYZ translation scaning, in the near future).
+* CImg for command line option and display.
   Please, install CImg in a parent folder as CImg.
-* RS232 for serial stepper.
-  Please, install RS232 in a parent folder as rs232.
 
 install example:
   cd code
-  #stepper
-  git clone git://github.com/coupdair/stepper.git
-  cd stepper; ls
-  cd ..
+  #grab
+  git clone git://github.com/coupdair/grab.git
+  ls grab
   #CImg
   wget http://downloads.sourceforge.net/project/cimg/CImg-1.4.9.zip?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fcimg%2Ffiles%2F&ts=1337853554&use_mirror=switch
   unzip CImg-1.4.9.zip
   ln -s CImg-1.4.9 CImg
   ls CImg
-  #RS232
-  git clone git://github.com/coupdair/rs232.git
-  ls rs232
   #folder structure
-  ls code #CImg CImg-1.4.9 rs232 stepper
-  #stepper
-  cd stepper
+  ls code #CImg CImg-1.4.9 grab
+  #grab
+  cd grab
   make
 
