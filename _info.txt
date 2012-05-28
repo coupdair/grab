@@ -1,0 +1,15 @@
+#compile
+clear; make clean; make; ./grab -h -I
+
+#documentation
+firefox doc/html/index.html &
+
+#edit
+gedit Makefile grab.h grab.cpp &
+
+#version
+git commit -a
+
+#run
+##run Elphel_wget
+./grab --message "*IDN?"
