@@ -53,6 +53,8 @@ public:
 #if cimg_debug>1
   std::string class_name;
 #endif
+  //! class (or library) version for information only
+  std::string class_version;
 private:
   //! grab type: wget or OpenCV or rtsp
 //! \todo implement . wget or _ OpenCV or _ rtsp
@@ -68,6 +70,7 @@ public:
 #if cimg_debug>1
     class_name="Cgrab_wget";
 #endif
+    class_version=VERSION;
   }//constructor
 
   //! Open grab device
