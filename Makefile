@@ -1,7 +1,7 @@
 PROGRAMS = grab  
 DOCUMENTATIONS = doc
 
-version = v0.0.1
+version = v0.1.0
 #OPT = -Dcimg_display=0 -Dcimg_debug=2 -Dcimg_use_vt100 -DVERSION=\"$(version)\" -Dcimg_use_jpeg -ljpeg -Dcimg_use_png -lpng -lz -Dcimg_use_tiff -ltiff
 OPT = -O0 -Dcimg_debug=2 -Dcimg_use_vt100 -DVERSION=\"$(version)\" -I.. -Wall -W -lm -ansi -pedantic -fno-tree-pre -Dcimg_use_vt100 -I/usr/X11R6/include -Dcimg_use_xshm -L/usr/X11R6/lib -lpthread -lX11 -lXext -Dcimg_use_jpeg -ljpeg -Dcimg_use_png -lpng -lz -Dcimg_use_tiff -ltiff
 

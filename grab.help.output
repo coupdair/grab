@@ -3,8 +3,8 @@
 
  usage: ./grab -h -I
         ./grab -n 10 --device-type ArduinoTTL
- version: v0.0.1
- compilation date:  (May 29 2012, 18:44:47)
+ version: v0.1.0
+ compilation date:  (May 29 2012, 19:02:28)
 
     --help           true                     help (or -h option)
     --info           false                    show compilation options (or -I option)
