@@ -4,10 +4,11 @@
  usage: ./grab -h -I
         ./grab -n 10 --device-type ArduinoTTL
  version: v0.0.1
- compilation date:  (May 29 2012, 17:25:40)
+ compilation date:  (May 29 2012, 18:44:47)
 
     --help           true                     help (or -h option)
     --info           false                    show compilation options (or -I option)
     --device-type    grab_WGet                type of grab device (e.g. ArduinoTTL or grab_WGet or grab_OpenCV or grab_RTSP).
     --device-path    192.168.0.9              path of grab device.
+    -X               true                     display image and graph (e.g. -X false for no display).
     -o               image.jpg                path for image(s).

@@ -166,6 +166,7 @@ std::cerr<<class_name<<"::"<<__func__<<": use system command execution (i.e. std
       std::cerr<<"error: Unable to move image from bimg to "<<image_path<<" (i.e. std::system error code="<<error<<").\n";//e.g. mv bimg ...
       return false;
     }
+    std::cerr<<"information: image saved in \""<<image_path<<"\" file.\n";
     ///load image in CImg
     image.load(image_path.c_str());
     return true;

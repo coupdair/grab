@@ -99,6 +99,7 @@ version: "+std::string(VERSION)+"\n compilation date: " \
   ///device
   const std::string DeviceType=cimg_option("--device-type","grab_WGet","type of grab device (e.g. ArduinoTTL or grab_WGet or grab_OpenCV or grab_RTSP).");
   const std::string DevicePath=cimg_option("--device-path","192.168.0.9","path of grab device.");
+  const bool display=cimg_option("-X",true,"display image and graph (e.g. -X false for no display).");
   ///image
 //  const int ImageNumber=cimg_option("-n",10,"number of images to acquire.");
   const std::string ImagePath=cimg_option("-o","image.jpg","path for image(s).");
@@ -114,16 +115,17 @@ version: "+std::string(VERSION)+"\n compilation date: " \
   if(!pGrab->grab(image,ImagePath)) return 1;
   image.channel(0);//set to grey level, only
 //display 2D image
-  image.display(ImagePath.c_str());
+  if(display) image.display(ImagePath.c_str());
 //display 1D profile on maximum along x
+  if(display)
   {
-  cimg_library::CImg<float> stat=image.get_stats();
-  int ymax=stat[9];
+    cimg_library::CImg<float> stat=image.get_stats();
+    int ymax=stat[9];
 //stat.print("stat");
 //std::cerr<<"ymax="<<ymax<<".\n"<<std::flush;
-  cimg_library::CImg<int> profile;profile=image.get_crop(0,ymax,image.width()-1,ymax);
-  profile.display_graph(std::string(ImagePath+" profile @ ymax").c_str());
-  }
+    cimg_library::CImg<int> profile;profile=image.get_crop(0,ymax,image.width()-1,ymax);
+    profile.display_graph(std::string(ImagePath+" profile @ ymax").c_str());
+  }//display
 //close
   pGrab->close();
   return 0;
