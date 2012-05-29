@@ -1,6 +1,7 @@
 #ifndef GRAB
 #define GRAB
 
+#include <sstream>
 #include "../CImg/CImg.h"
 
 class Cgrab
@@ -47,6 +48,22 @@ std::cerr<<class_name<<"::"<<__func__<<"(\""<<device_path_name<<"\")\n"<<std::fl
     device_path=device_path_name;
     return true;
   }//open
+
+  //! convert value to string (might be fixed size with specific character fill)
+  /**
+   * format value to string, string size can be fixed and filled with a specific character
+  **/
+  template<typename T> std::string valueToString(const T& value,int size=-1,char c='0')
+  {
+    std::ostringstream stream;
+    if(size>0)
+    {
+      stream.width(size);
+      stream.fill(c);
+    }
+    stream << value;
+    return stream.str();
+  }//valueToString
 
   //! grab one image
   /** 
