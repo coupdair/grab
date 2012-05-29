@@ -79,7 +79,7 @@
 //CImg Library
 #include "../CImg/CImg.h"
 //grab library
-#include "grab.h"
+#include "grab_factory.h"
 
 int main(int argc, char *argv[])
 { 
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
   cimg_usage(std::string("grab program of the Laboratory of Mechanics in Lille (LML) is intended to image acquisition from camera device, \
 it uses different GNU libraries (see --info option)\n\n \
 usage: ./grab -h -I\n \
-       ./grab -n 10 --device-type Elphel\n \
+       ./grab -n 10 --device-type ArduinoTTL\n \
 version: "+std::string(VERSION)+"\n compilation date: " \
             ).c_str());//cimg_usage
   ///information and help
@@ -97,7 +97,7 @@ version: "+std::string(VERSION)+"\n compilation date: " \
   bool show_info=cimg_option("-I",false,NULL);//-I hidden option
   if( cimg_option("--info",show_info,"show compilation options (or -I option)") ) {show_info=true;cimg_library::cimg::info();}//same --info or -I option
   ///device
-//  const std::string DeviceType=cimg_option("--device-type","Elphel","type of grab device (e.g. ArduinoTTL or Elphel_wget or Elphel_OpenCV or Elphel_rtsp).");
+  const std::string DeviceType=cimg_option("--device-type","grab_WGet","type of grab device (e.g. ArduinoTTL or grab_WGet or grab_OpenCV or grab_RTSP).");
   const std::string DevicePath=cimg_option("--device-path","192.168.0.9","path of grab device.");
   ///image
 //  const int ImageNumber=cimg_option("-n",10,"number of images to acquire.");
@@ -105,12 +105,13 @@ version: "+std::string(VERSION)+"\n compilation date: " \
   ///stop if help requested
   if(show_help) {/*print_help(std::cerr);*/return 0;}
 //grab device object
-  Cgrab_WGet grab;
+  Cgrab_factory grab_factory;
+  Cgrab *pGrab=grab_factory.create(DeviceType);
 //open
-  if(!grab.open(DevicePath/*,DeviceType*/)) return 1;
+  if(!pGrab->open(DevicePath)) return 1;
 //get
   cimg_library::CImg<int> image;
-  if(!grab.grab(image,ImagePath)) return 1;
+  if(!pGrab->grab(image,ImagePath)) return 1;
   image.channel(0);//set to grey level, only
 //display 2D image
   image.display(ImagePath.c_str());
@@ -124,7 +125,7 @@ version: "+std::string(VERSION)+"\n compilation date: " \
   profile.display_graph(std::string(ImagePath+" profile @ ymax").c_str());
   }
 //close
-  grab.close();
+  pGrab->close();
   return 0;
 }//main
 

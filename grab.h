@@ -40,7 +40,7 @@ public:
   bool open(const std::string& device_path_name)
   {
 #if cimg_debug>1
-std::cerr<<class_name<<"::"<<__func__<<"("<<device_path_name<<")\n"<<std::flush;
+std::cerr<<class_name<<"::"<<__func__<<"(\""<<device_path_name<<"\")\n"<<std::flush;
 #endif
     ///check \c device_path validity
     if(device_path_name.empty()) return false;
@@ -59,7 +59,7 @@ std::cerr<<class_name<<"::"<<__func__<<"("<<device_path_name<<")\n"<<std::flush;
   bool grab(cimg_library::CImg<T> &image,const std::string &image_path)
   {
 #if cimg_debug>1
-std::cerr<<class_name<<"::"<<__func__<<"(CImg<"<<image.pixel_type()<<">,"<<image_path<<")\n"<<std::flush;
+std::cerr<<class_name<<"::"<<__func__<<"(CImg<"<<image.pixel_type()<<">,\""<<image_path<<"\")\n"<<std::flush;
 #endif
     ///load image in CImg
     image.load(image_path.c_str());
