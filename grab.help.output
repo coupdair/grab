@@ -1,0 +1,12 @@
+
+ grab : grab program of the Laboratory of Mechanics in Lille (LML) is intended to image acquisition from camera device, it uses different GNU libraries (see --info option)
+
+ usage: ./grab -h -I
+        ./grab -n 10 --device-type Elphel
+ version: v0.0.0
+ compilation date:  (May 28 2012, 23:53:06)
+
+    --help           true                     help (or -h option)
+    --info           false                    show compilation options (or -I option)
+    --device-path    168.0.0.9                path of grab device.
+    -o               image.jpg                path for image(s).
