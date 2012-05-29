@@ -4,7 +4,7 @@
  usage: ./grab -h -I
         ./grab -n 10 --device-type Elphel
  version: v0.0.1
- compilation date:  (May 29 2012, 14:01:06)
+ compilation date:  (May 29 2012, 16:32:20)
 
     --help           true                     help (or -h option)
     --info           false                    show compilation options (or -I option)

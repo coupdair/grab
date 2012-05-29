@@ -81,7 +81,7 @@ std::cerr<<class_name<<"::"<<__func__<<" empty\n"<<std::flush;
 
 };//Cgrab
 
-class Cgrab_wget: public Cgrab
+class Cgrab_WGet: public Cgrab
 {
 private:
   //! wget command line
@@ -91,13 +91,13 @@ public:
   /**
    *
   **/
-  Cgrab_wget()
+  Cgrab_WGet()
   {
     ///call parent open function
     Cgrab();
     ///set \c class_name
 #if cimg_debug>1
-    class_name="Cgrab_wget";
+    class_name="Cgrab_WGet";
 #endif
   }//constructor
 
@@ -185,7 +185,7 @@ std::cerr<<class_name<<"::"<<__func__<<" empty\n"<<std::flush;
     return Cgrab::close();
   }//close
 
-};//Cgrab_wget class
+};//Cgrab_WGet class
 
 #endif //GRAB
 
