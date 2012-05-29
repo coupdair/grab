@@ -37,7 +37,7 @@ public:
    *
    * @return 
    */
-  bool open(const std::string& device_path_name)
+  virtual bool open(const std::string& device_path_name)
   {
 #if cimg_debug>1
 std::cerr<<class_name<<"::"<<__func__<<"(\""<<device_path_name<<"\")\n"<<std::flush;
@@ -55,8 +55,9 @@ std::cerr<<class_name<<"::"<<__func__<<"(\""<<device_path_name<<"\")\n"<<std::fl
    *
    * @return 
    */
-  template<typename T>
-  bool grab(cimg_library::CImg<T> &image,const std::string &image_path)
+//  template<typename T>
+//  virtual bool grab(cimg_library::CImg<T> &image,const std::string &image_path)
+  virtual bool grab(cimg_library::CImg<int> &image,const std::string &image_path)
   {
 #if cimg_debug>1
 std::cerr<<class_name<<"::"<<__func__<<"(CImg<"<<image.pixel_type()<<">,\""<<image_path<<"\")\n"<<std::flush;
@@ -65,13 +66,13 @@ std::cerr<<class_name<<"::"<<__func__<<"(CImg<"<<image.pixel_type()<<">,\""<<ima
     image.load(image_path.c_str());
     return true;
   }//grab
-
+/**/
   //! Close grab
   /** 
    *
    * @return 
    */
-  bool close()
+  virtual bool close()
   {
 #if cimg_debug>1
 std::cerr<<class_name<<"::"<<__func__<<" empty\n"<<std::flush;
@@ -144,13 +145,13 @@ std::cerr<<class_name<<"::"<<__func__<<"/device_path_wget=\""<<device_path_wget<
    *
    * @return 
    */
-  template<typename T>
-  bool grab(cimg_library::CImg<T> &image,const std::string &image_path)
+//  template<typename T>
+//  bool grab(cimg_library::CImg<T> &image,const std::string &image_path)
+  bool grab(cimg_library::CImg<int> &image,const std::string &image_path)
   {
 #if cimg_debug>1
 std::cerr<<class_name<<"::"<<__func__<<": use system command execution (i.e. std::system() )\n"<<std::flush;
 #endif
-/**/
     ///get image
     int error=std::system(device_path_wget.c_str());
     if(error!=0)
@@ -165,7 +166,6 @@ std::cerr<<class_name<<"::"<<__func__<<": use system command execution (i.e. std
       std::cerr<<"error: Unable to move image from bimg to "<<image_path<<" (i.e. std::system error code="<<error<<").\n";//e.g. mv bimg ...
       return false;
     }
-/**/
     ///load image in CImg
     image.load(image_path.c_str());
     return true;

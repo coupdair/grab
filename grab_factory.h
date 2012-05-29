@@ -56,7 +56,7 @@ std::cerr<<class_name<<"::"<<__func__<<"("<<type<<")\n"<<std::flush;
   Cgrab* create(std::string type_name)
   {
 #if cimg_debug>1
-std::cerr<<class_name<<"::"<<__func__<<"("<<type_name<<")\n"<<std::flush;
+std::cerr<<class_name<<"::"<<__func__<<"(\""<<type_name<<"\")\n"<<std::flush;
 #endif
     if(type_name=="grab_image_file") return create(0);
     else if(type_name=="grab_WGet") return create(1);
