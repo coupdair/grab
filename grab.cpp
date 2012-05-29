@@ -105,7 +105,7 @@ version: "+std::string(VERSION)+"\n compilation date: " \
   ///stop if help requested
   if(show_help) {/*print_help(std::cerr);*/return 0;}
 //grab device object
-  Cgrab grab;
+  Cgrab_wget grab;
 //open
   if(!grab.open(DevicePath/*,DeviceType*/)) return 1;
 //get
