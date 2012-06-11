@@ -28,7 +28,7 @@ public:
 #if cimg_debug>1
     class_name="Cgrab";
 #endif
-    class_version=VERSION;
+    class_version=GRAB_VERSION;
   }//constructor
 
   //! Open grab device
