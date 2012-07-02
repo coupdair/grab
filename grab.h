@@ -131,7 +131,7 @@ public:
     ///call parent open function
     Cgrab::open(device_path_name);
     ///wget
-    device_path_wget="wget http://"+device_path_name+":8081/bimg";
+    device_path_wget="wget -e \"background=off\" http://"+device_path_name+":8081/bimg";
 #if cimg_debug>1
 std::cerr<<class_name<<"::"<<__func__<<"/device_path_wget=\""<<device_path_wget<<"\"\n"<<std::flush;
 #endif

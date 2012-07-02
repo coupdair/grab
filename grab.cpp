@@ -18,7 +18,7 @@
  *  \verbinclude "grab.help.output"
  *  
  *  \section sectionGrabDocumentation documentation outline
- *  This is the reference documentation of <a href="http://www.meol.cnrs.fr/">serial</a>, from the <a href="http://www.univ-lille1.fr/lml/">LML</a>.\n\n
+ *  This is the reference documentation of <a href="http://www.meol.cnrs.fr/">grab</a>, from the <a href="http://www.univ-lille1.fr/lml/">LML</a>.\n\n
  *  frame grabber software. The main function is in <a href="grab_8cpp.html">grab.cpp</a> source file.\n\n
  *  This documentation has been automatically generated from the sources, 
  *  using the tool <a href="http://www.doxygen.org">doxygen</a>. It should be readed as HTML, LaTex and man page.\n
@@ -72,8 +72,6 @@
  *
 **/
 
-//! \todo serial_put doxygen user page
-
 //standard library
 #include <iostream>
 //CImg Library
@@ -88,7 +86,8 @@ int main(int argc, char *argv[])
   cimg_usage(std::string("grab program of the Laboratory of Mechanics in Lille (LML) is intended to image acquisition from camera device, \
 it uses different GNU libraries (see --info option)\n\n \
 usage: ./grab -h -I\n \
-       ./grab -n 10 --device-type ArduinoTTL\n \
+       ./grab -n 10 --device-type grab_WGet\n \
+       ./grab -n 10 --device-type grab_image_file #to do off line run or test\n \
 version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
             ).c_str());//cimg_usage
   ///information and help
@@ -97,13 +96,13 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   bool show_info=cimg_option("-I",false,NULL);//-I hidden option
   if( cimg_option("--info",show_info,"show compilation options (or -I option)") ) {show_info=true;cimg_library::cimg::info();}//same --info or -I option
   ///device
-  const std::string DeviceType=cimg_option("--device-type","grab_WGet","type of grab device (e.g. ArduinoTTL or grab_WGet or grab_OpenCV or grab_RTSP).");
+  const std::string DeviceType=cimg_option("--device-type","grab_WGet","type of grab device (e.g. grab_image_file or grab_WGet or ArduinoTTL or Elphel_OpenCV or Elphel_rtsp).");
   const std::string DevicePath=cimg_option("--device-path","192.168.0.9","path of grab device.");
-  const bool display=cimg_option("-X",true,"display image and graph (e.g. -X false for no display).");
   ///image
-//  const int ImageNumber=cimg_option("-n",10,"number of images to acquire.");
-  const std::string ImagePath=cimg_option("-o","image.jpg","path for image(s).");
-  ///stop if help requested
+  const int ImageNumber=cimg_option("-n",10,"number of images to acquire.");
+  const std::string ImagePath=cimg_option("-o","image.jpg","path for image(s).");  
+  const bool display=cimg_option("-X",true,"display image and graph (e.g. -X false for no display).");
+    ///stop if help requested
   if(show_help) {/*print_help(std::cerr);*/return 0;}
 //grab device object
   Cgrab_factory grab_factory;
@@ -112,20 +111,50 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   if(!pGrab->open(DevicePath)) return 1;
 //get
   cimg_library::CImg<int> image;
-  if(!pGrab->grab(image,ImagePath)) return 1;
-  image.channel(0);//set to grey level, only
-//display 2D image
-  if(display) image.display(ImagePath.c_str());
+  //int ymax=0;
+  //cimg_library::CImg<int> profile;
+  //cimg_library::CImg<float> mean;
+  //cimg_library::CImg<int> min;
+  //cimg_library::CImg<int> max;
+  std::string file;file.reserve(ImagePath.size()+64);
+  for(int i=0;i<ImageNumber;++i)
+  {//do
+    file=cimg_library::cimg::number_filename(ImagePath.c_str(),i,3,(char*)file.c_str());
+    //file=cimg_library::cimg::filename(ImagePath.c_str(),i,3,(char*)file.c_str());
+    if(!pGrab->grab(image,ImagePath)) return 1;
+    image.channel(0);//set to grey level, only
+    //display 2D image
+    if(display) image.display(ImagePath.c_str());
+/*
+    if(i==0)
+    {//search maximum for first image only
+      cimg_library::CImg<float> stat=image.get_stats();
+      ymax=stat[9];
+    }//max
+    profile=image.get_crop(0,ymax,image.width()-1,ymax);//.get_line(ymax);
+    if(i==0)
+    {
+      min=max=mean=profile;
+    }
+    else
+    {
+      mean+=profile;
+      min=profile.get_min(min);
+      max=profile.get_max(max);
+    }
+*/
+  }//done
+/*
+  //mean
+  mean/=ImageNumber;
+//display last 2D image
+  image.display(file.c_str());
 //display 1D profile on maximum along x
-  if(display)
-  {
-    cimg_library::CImg<float> stat=image.get_stats();
-    int ymax=stat[9];
-//stat.print("stat");
-//std::cerr<<"ymax="<<ymax<<".\n"<<std::flush;
-    cimg_library::CImg<int> profile;profile=image.get_crop(0,ymax,image.width()-1,ymax);
-    profile.display_graph(std::string(ImagePath+" profile @ ymax").c_str());
-  }//display
+  profile.display_graph(file.c_str());
+  mean.display_graph("mean");
+  min.display_graph("min");
+  max.display_graph("max");
+*/
 //close
   pGrab->close();
   return 0;
