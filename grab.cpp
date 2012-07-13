@@ -98,8 +98,8 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   const std::string DevicePath=cimg_option("--device-path","/dev/ttyUSB0","path of grab device (e.g. 192.168.0.9 or /dev/ttyUSB0).");
   ///image
   const int ImageNumber=cimg_option("-n",10,"number of images to acquire.");
-  const std::string ImagePath=cimg_option("-o","image.tif","path for image(s).");
-  const std::string TemporaryImagePath=cimg_option("-t","image_%06d.imx","temporary path for image(s) (e.g. image_000001.imx).");
+  const std::string ImagePath=cimg_option("-o","image.cimg","path for image(s) (note: trouble with TIF and PNG for 16bit images).");
+  const std::string TemporaryImagePath=cimg_option("-t","image.imx","temporary path for image(s) (TODO: i.e. image_%05d.imx e.g. image_000001.imx).");
   const bool display=cimg_option("-X",true,"display image and graph (e.g. -X false for no display).");
     ///stop if help requested
   if(show_help) {/*print_help(std::cerr);*/return 0;}
@@ -107,8 +107,7 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   Cgrab_factory grab_factory;
 //  Cgrab *pGrab=grab_factory.create(DeviceType);
   Cgrab_AandDEE_serial *pGrab=new Cgrab_AandDEE_serial;
-//  pGrab->temporary_image_path=TemporaryImagePath;
-  pGrab->temporary_image_path="image.imx";
+  pGrab->temporary_image_path=TemporaryImagePath;
 //open
   if(!pGrab->open(DevicePath)) return 1;
 //get
@@ -145,13 +144,7 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
       max=profile.get_max(max);
     }
 */
-{
-cimg_library::CImg<unsigned int> img(image);
-img.print("image");
-//cimg::endian_swap(img.data,2);
-//img.print("image endian_swap");
-img.save(file.c_str());
-}
+    image.save(file.c_str());
   }//done
 /*
   //mean

@@ -286,7 +286,7 @@ public:
   bool grab(cimg_library::CImg<int> &image,const std::string &image_path)
   {
 #if cimg_debug>1
-std::cerr<<class_name<<"::"<<__func__<<": use system command execution (i.e. std::system() )\n"<<std::flush;
+std::cerr<<class_name<<"::"<<__func__<<": use load image (e.g. image_12345.IMX )\n"<<std::flush;
 #endif
     ///increment temporary image index
     temporary_image_index++;

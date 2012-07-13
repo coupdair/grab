@@ -5,13 +5,13 @@
         ./grab -n 10 --device-type grab_WGet
         ./grab -n 10 --device-type grab_image_file #to do off line run or test
  version: v0.1.2
- compilation date:  (Jul 13 2012, 16:39:32)
+ compilation date:  (Jul 13 2012, 16:49:28)
 
     --help   = true         : help (or -h option)
     --info   = false        : show compilation options (or -I option)
     --device-type = grab_AandDEE_serial : type of grab device (e.g. grab_image_file or grab_WGet or grab_AandDEE_serial -or Elphel_OpenCV or Elphel_rtsp-).
     --device-path = /dev/ttyUSB0 : path of grab device (e.g. 192.168.0.9 or /dev/ttyUSB0).
     -n       = 10           : number of images to acquire.
-    -o       = image.tif    : path for image(s).
-    -t       = image_%06d.imx : temporary path for image(s) (e.g. image_000001.imx).
+    -o       = image.cimg   : path for image(s) (note: trouble with TIF and PNG for 16bit images).
+    -t       = image.imx    : temporary path for image(s) (TODO: i.e. image_%05d.imx e.g. image_000001.imx).
     -X       = true         : display image and graph (e.g. -X false for no display).
