@@ -4,12 +4,14 @@
  usage: ./grab -h -I
         ./grab -n 10 --device-type grab_WGet
         ./grab -n 10 --device-type grab_image_file #to do off line run or test
- version: v0.1.0
- compilation date:  (Jun 12 2012, 17:02:32)
+ version: v0.1.2
+ compilation date:  (Jul 13 2012, 15:59:18)
 
-    --help           true                     help (or -h option)
-    --info           false                    show compilation options (or -I option)
-    --device-type    grab_WGet                type of grab device (e.g. grab_image_file or grab_WGet or ArduinoTTL or Elphel_OpenCV or Elphel_rtsp).
-    --device-path    192.168.0.9              path of grab device.
-    -n               10                       number of images to acquire.
-    -o               image.jpg                path for image(s).
+    --help   = true         : help (or -h option)
+    --info   = false        : show compilation options (or -I option)
+    --device-type = grab_AandDEE_serial : type of grab device (e.g. grab_image_file or grab_WGet or grab_AandDEE_serial -or Elphel_OpenCV or Elphel_rtsp-).
+    --device-path = /dev/ttyUSB0 : path of grab device (e.g. 192.168.0.9 or /dev/ttyUSB0).
+    -n       = 10           : number of images to acquire.
+    -o       = image.tif    : path for image(s).
+    -t       = image_%06d.imx : temporary path for image(s) (e.g. image_000001.imx).
+    -X       = true         : display image and graph (e.g. -X false for no display).

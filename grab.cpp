@@ -74,9 +74,7 @@
 
 //standard library
 #include <iostream>
-//CImg Library
-#include "../CImg/CImg.h"
-//grab library
+//grab library (including CImg Library)
 #include "grab_factory.h"
 
 int main(int argc, char *argv[])
@@ -96,17 +94,21 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   bool show_info=cimg_option("-I",false,NULL);//-I hidden option
   if( cimg_option("--info",show_info,"show compilation options (or -I option)") ) {show_info=true;cimg_library::cimg::info();}//same --info or -I option
   ///device
-  const std::string DeviceType=cimg_option("--device-type","grab_WGet","type of grab device (e.g. grab_image_file or grab_WGet or ArduinoTTL or Elphel_OpenCV or Elphel_rtsp).");
-  const std::string DevicePath=cimg_option("--device-path","192.168.0.9","path of grab device.");
+  const std::string DeviceType=cimg_option("--device-type","grab_AandDEE_serial","type of grab device (e.g. grab_image_file or grab_WGet or grab_AandDEE_serial -or Elphel_OpenCV or Elphel_rtsp-).");
+  const std::string DevicePath=cimg_option("--device-path","/dev/ttyUSB0","path of grab device (e.g. 192.168.0.9 or /dev/ttyUSB0).");
   ///image
   const int ImageNumber=cimg_option("-n",10,"number of images to acquire.");
-  const std::string ImagePath=cimg_option("-o","image.jpg","path for image(s).");  
+  const std::string ImagePath=cimg_option("-o","image.tif","path for image(s).");
+  const std::string TemporaryImagePath=cimg_option("-t","image_%06d.imx","temporary path for image(s) (e.g. image_000001.imx).");
   const bool display=cimg_option("-X",true,"display image and graph (e.g. -X false for no display).");
     ///stop if help requested
   if(show_help) {/*print_help(std::cerr);*/return 0;}
 //grab device object
   Cgrab_factory grab_factory;
-  Cgrab *pGrab=grab_factory.create(DeviceType);
+//  Cgrab *pGrab=grab_factory.create(DeviceType);
+  Cgrab_AandDEE_serial *pGrab=new Cgrab_AandDEE_serial;
+//  pGrab->temporary_image_path=TemporaryImagePath;
+  pGrab->temporary_image_path="image.imx";
 //open
   if(!pGrab->open(DevicePath)) return 1;
 //get
@@ -119,12 +121,12 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   std::string file;file.reserve(ImagePath.size()+64);
   for(int i=0;i<ImageNumber;++i)
   {//do
-    file=cimg_library::cimg::number_filename(ImagePath.c_str(),i,3,(char*)file.c_str());
+    file=cimg_library::cimg::/*number_*/filename_number(ImagePath.c_str(),i,3,(char*)file.c_str());
     //file=cimg_library::cimg::filename(ImagePath.c_str(),i,3,(char*)file.c_str());
     if(!pGrab->grab(image,ImagePath)) return 1;
     image.channel(0);//set to grey level, only
     //display 2D image
-    if(display) image.display(ImagePath.c_str());
+    if(display) image.display(file.c_str());
 /*
     if(i==0)
     {//search maximum for first image only
@@ -143,6 +145,7 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
       max=profile.get_max(max);
     }
 */
+    image.save(file.c_str());
   }//done
 /*
   //mean

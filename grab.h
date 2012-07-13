@@ -2,7 +2,19 @@
 #define GRAB
 
 #include <sstream>
-#include "../CImg/CImg.h"
+//CImg Library with additional image formats
+#if version_cimg < 130
+  #define cimg_display_type  cimg_display
+  #include "../CImg.Tool/useCImg.h"
+#else
+  #include "../CImg/CImg.h"
+#endif
+#ifdef cimg_use_netcdf
+#include "../CImg.Tool/CImg_NetCDF.h"
+#endif
+
+//serial needed for AandDEE, only.
+//#include "../rs232/serial_factory.h"
 
 class Cgrab
 {
@@ -14,8 +26,8 @@ public:
   //! class (or library) version for information only
   std::string class_version;
 private:
-  //! grab type: wget or OpenCV or rtsp
-//! \todo implement . wget or _ OpenCV or _ rtsp
+  //! grab type: wget or AandDEEserial or OpenCV or rtsp
+//! \todo implement v wget or . AandDEEserial or _ OpenCV or _ rtsp
   std::string device_path;
 
 public:
@@ -177,6 +189,7 @@ std::cerr<<class_name<<"::"<<__func__<<": use system command execution (i.e. std
       return false;
     }
     ///move image
+//! \todo check image format extention as temporary grab file (e.g. if Elphel camera, .JPG for move).
     error=std::system(std::string("mv bimg "+image_path).c_str());
     if(error!=0)
     {
@@ -204,6 +217,104 @@ std::cerr<<class_name<<"::"<<__func__<<" empty\n"<<std::flush;
   }//close
 
 };//Cgrab_WGet class
+
+class Cgrab_AandDEE_serial: public Cgrab
+{
+//private:
+public:
+  //! AandDEE serial device path (e.g. /dev/ttyUSB0)
+  //std::string device_path;//of Cgrab class
+  //! communication with AandDEE as serial device (e.g. serial named /dev/ttyUSB0; \see device_path )
+//! \todo [medium] communicate with AandDEE.
+//  Cserial* pComAandDEE;
+  //! temporary image path (e.g. /media/data/temp/image_%06d.imx filled with an endless loop by rsync , scp, ...)
+  std::string temporary_image_path;
+  //! temporary image index
+  int temporary_image_index;
+public:
+  //! constructor
+  /**
+   *
+  **/
+  Cgrab_AandDEE_serial()
+  {
+    ///call parent open function
+    Cgrab();
+    ///set \c class_name
+#if cimg_debug>1
+    class_name="Cgrab_AandDEE_serial";
+#endif
+  }//constructor
+
+  //! Open grab device
+  /** 
+   *
+   * @param[in] device_path_name: path of camera (e.g. 192.168.0.9)
+   *
+   * @return 
+   */
+  bool open(const std::string& device_path_name)
+  {
+    ///call parent open function
+    Cgrab::open(device_path_name);
+    ///wget
+    temporary_image_index=0;
+    ///check device validity
+//! \todo [high] check serial
+    ///check temporary image folder
+//! \todo [high] check temporary_image_path
+    int error=std::system("ls");
+    if(error!=0)
+    {
+      std::cerr<<"error: Unable to access to folder \""<<temporary_image_path<<"\" (i.e. std::system error code="<<error<<").\n";//e.g. ls /media/data/temp
+      return false;
+    }
+    ///print availability
+    std::cerr<<"device is available."<<std::endl;
+    return true;
+  }//open
+  
+  //! grab one image
+  /** 
+   *
+   * @param[in] message= string to send to serial port  
+   *
+   * @return 
+   */
+//  template<typename T>
+//  bool grab(cimg_library::CImg<T> &image,const std::string &image_path)
+  bool grab(cimg_library::CImg<int> &image,const std::string &image_path)
+  {
+#if cimg_debug>1
+std::cerr<<class_name<<"::"<<__func__<<": use system command execution (i.e. std::system() )\n"<<std::flush;
+#endif
+    ///increment temporary image index
+    temporary_image_index++;
+    ///set temporary image file name
+//! \todo [high] use current image index
+//! \bug should be format string, so use sprintf instead.
+    std::string file;file.reserve(image_path.size()+64);
+    file=cimg_library::cimg::/*number_*/filename_number(temporary_image_path.c_str(),temporary_image_index,5,(char*)file.c_str());
+    ///load image in CImg
+    image.load(file.c_str());//e.g. IMX
+    return true;
+  }//grab
+
+  //! Close grab
+  /** 
+   *
+   * @return 
+   */
+  bool close()
+  {
+#if cimg_debug>1
+std::cerr<<class_name<<"::"<<__func__<<" empty\n"<<std::flush;
+#endif
+    ///call parent close function
+    return Cgrab::close();
+  }//close
+
+};//Cgrab_AandDEE_serial class
 
 #endif //GRAB
 
