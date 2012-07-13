@@ -145,7 +145,13 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
       max=profile.get_max(max);
     }
 */
-    image.save(file.c_str());
+{
+cimg_library::CImg<unsigned int> img(image);
+img.print("image");
+//cimg::endian_swap(img.data,2);
+//img.print("image endian_swap");
+img.save(file.c_str());
+}
   }//done
 /*
   //mean
