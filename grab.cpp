@@ -105,7 +105,6 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   if(show_help) {/*print_help(std::cerr);*/return 0;}
 //grab device object
   Cgrab_factory grab_factory;
-//! \todo [high] . use full factory.
   Cgrab *pGrab=grab_factory.create(DeviceType);
   pGrab->temporary_image_path=TemporaryImagePath;
 //open
@@ -121,7 +120,7 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   for(int i=0;i<ImageNumber;++i)
   {//do
     pGrab->image_file_name(file,ImagePath,i);
-    if(!pGrab->grab(image,file.c_str())) return 1;
+    if(!pGrab->grab(image,file.c_str())) return 1;//might use temporary image
     image.channel(0);//set to grey level, only
     //display 2D image
     if(display) image.display(file.c_str());
@@ -143,7 +142,7 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
       max=profile.get_max(max);
     }
 */
-    image.save(file.c_str());
+    if(!pGrab->temporary_image_path.empty()) image.save(file.c_str());//use temporary image, so save final record
   }//done
 /*
   //mean

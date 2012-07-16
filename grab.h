@@ -179,11 +179,19 @@ public:
 #if cimg_debug>1
 std::cerr<<class_name<<"::"<<__func__<<"/device_path_wget=\""<<device_path_wget<<"\"\n"<<std::flush;
 #endif
+    ///check temporary image path format
+//! \todo [medium] v check image format extention as temporary grab file (e.g. if Elphel camera, .JPG for move).
+    const char *ext = cimg::filename_split(temporary_image_path.c_str());//,body);
+    if(cimg::strncasecmp(ext,"jpg",3))
+    {
+//! \todo [low] replace bad extention ?!
+std::cerr<<"error: bad file name extention (should be .JPG, but \""<<temporary_image_path<<"\" provided)\n";
+      return false;
+    }
     ///check temporary image folder
-//! \todo [medium] check image format extention as temporary grab file (e.g. if Elphel camera, .JPG for move).
     if(!check_image_folder(temporary_image_path)) return false;
     ///check device validity
-//! \todo [medium] use temporary image file name (see \c Cgrab_AandDEE_serial::temporary_image_path)
+//! \todo [low] use temporary image file name (see \c temporary_image_path)
     int error=std::system(device_path_wget.c_str());
     if(error!=0)
     {
@@ -219,9 +227,17 @@ std::cerr<<class_name<<"::"<<__func__<<": use system command execution (i.e. std
 #endif
     ///file name
     std::string file;
-//! \todo [medium] check extention .JPG
-    //file=image_path;//if .JPG
-    image_file_name(file,temporary_image_path,0);//else
+//! \todo [medium] v check extention .JPG
+    const char *ext = cimg::filename_split(image_path.c_str());
+    if(!cimg::strncasecmp(ext,"jpg",3))
+    {//save native image (.JPG)
+      file=image_path;//e.g. .JPG
+      temporary_image_path.clear();//! empty \c temporary_image_path as it will not be used
+    }
+    else
+    {//save native image (.JPG) as temporary image
+      image_file_name(file,temporary_image_path,0);//extention JPG already checked in \c open
+    }
     ///get image
     int error=std::system(device_path_wget.c_str());
     if(error!=0)
@@ -230,7 +246,6 @@ std::cerr<<class_name<<"::"<<__func__<<": use system command execution (i.e. std
       return false;
     }
     ///move image
-//! \todo [medium] . use temporary image file name
     error=std::system(std::string("mv bimg "+file).c_str());
     if(error!=0)
     {
@@ -299,7 +314,7 @@ public:
     ///call parent open function
     Cgrab::open(device_path_name);
     ///set temporary image index
-//! \todo [medium] may start at a different number (e.g. setting 0 here, will start at 1) for image file name.
+//! \todo [low] may start at a different number (e.g. setting 0 here, will start at 1) for image file name.
     temporary_image_index=0;
     ///check device validity
 //! \todo [high] check AandDEE serial

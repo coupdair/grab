@@ -1,7 +1,7 @@
 PROGRAMS = version lavision grab  
 DOCUMENTATIONS = doc
 
-version = v0.1.3
+version = v0.1.4
 version_cimg = 125
 #version_cimg = 149
 OPT_FORMAT = -Dcimg_use_jpeg -ljpeg -Dcimg_use_png -lpng -lz -Dcimg_use_tiff -ltiff -Dcimg_use_lavision -D_LINUX
