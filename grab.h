@@ -25,6 +25,8 @@ public:
 #endif
   //! class (or library) version for information only
   std::string class_version;
+  //! temporary image path (e.g. "bimg.jpg" for Elphel camera or "/media/data/temp/image_%05d.imx" for FlowMaster camera)
+  std::string temporary_image_path;
 private:
   //! grab type: wget or AandDEEserial or OpenCV or rtsp
 //! \todo implement v wget or . AandDEEserial or _ OpenCV or _ rtsp
@@ -245,7 +247,7 @@ public:
 //! \todo [medium] communicate with AandDEE.
 //  Cserial* pComAandDEE;
   //! temporary image path (e.g. /media/data/temp/image_%06d.imx filled with an endless loop by rsync , scp, ...)
-  std::string temporary_image_path;
+  //std::string temporary_image_path;//of Cgrab class
   //! temporary image index
   int temporary_image_index;
 public:

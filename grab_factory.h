@@ -37,8 +37,9 @@ std::cerr<<class_name<<"::"<<__func__<<"("<<type<<")\n"<<std::flush;
     {
       case 0: return new Cgrab;        break;
       case 1: return new Cgrab_WGet;   break;
-//      case 2: return new Cgrab_OpenCV; break;
-//      case 3: return new Cgrab_RTSP;   break;
+      case 2: return new Cgrab_AandDEE_serial; break;
+//      case 3: return new Cgrab_OpenCV; break;
+//      case 4: return new Cgrab_RTSP;   break;
       default:
       {
         std::cerr<<class_name<<"::"<<__func__<<": error: serial type="<<type<<" is unknown\n"<<std::flush;
@@ -60,8 +61,9 @@ std::cerr<<class_name<<"::"<<__func__<<"(\""<<type_name<<"\")\n"<<std::flush;
 #endif
     if(type_name=="grab_image_file") return create(0);
     else if(type_name=="grab_WGet") return create(1);
-//    else if(type_name=="grab_OpenCV") return create(2);
-//    else if(type_name=="grab_RTSP") return create(3);
+    else if(type_name=="grab_AandDEE_serial") return create(2);
+//    else if(type_name=="grab_OpenCV") return create(3);
+//    else if(type_name=="grab_RTSP") return create(4);
     else
     {
       std::cerr<<class_name<<"::"<<__func__<<": error: grab type="<<type_name<<" not handled.\n"<<std::flush;
