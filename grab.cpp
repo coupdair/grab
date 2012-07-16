@@ -98,8 +98,8 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   const std::string DevicePath=cimg_option("--device-path","/dev/ttyUSB0","path of grab device (e.g. 192.168.0.9 or /dev/ttyUSB0).");
   ///image
   const int ImageNumber=cimg_option("-n",10,"number of images to acquire.");
-  const std::string ImagePath=cimg_option("-o","image.cimg","path for image(s) (note: trouble with TIF and PNG for 16bit images).");
-  const std::string TemporaryImagePath=cimg_option("-t","image.imx","temporary path for image(s) (TODO: i.e. image_%05d.imx e.g. image_000001.imx).");
+  const std::string ImagePath=cimg_option("-o","image_%03d.cimg","path for image(s) (i.e. image_%03d.cimg e.g. image_000.cimg; note: trouble with TIF and PNG for 16bit images).");
+  const std::string TemporaryImagePath=cimg_option("-t","image_%05d.imx","temporary path for image(s) (i.e. image_%05d.imx e.g. image_000001.imx).");
   const bool display=cimg_option("-X",true,"display image and graph (e.g. -X false for no display).");
     ///stop if help requested
   if(show_help) {/*print_help(std::cerr);*/return 0;}
@@ -120,9 +120,8 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   std::string file;file.reserve(ImagePath.size()+64);
   for(int i=0;i<ImageNumber;++i)
   {//do
-    file=cimg_library::cimg::/*number_*/filename_number(ImagePath.c_str(),i,3,(char*)file.c_str());
-    //file=cimg_library::cimg::filename(ImagePath.c_str(),i,3,(char*)file.c_str());
-    if(!pGrab->grab(image,ImagePath)) return 1;
+    pGrab->image_file_name(file,ImagePath,i);
+    if(!pGrab->grab(image,file.c_str())) return 1;
     image.channel(0);//set to grey level, only
     //display 2D image
     if(display) image.display(file.c_str());

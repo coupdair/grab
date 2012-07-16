@@ -77,6 +77,21 @@ std::cerr<<class_name<<"::"<<__func__<<"(\""<<device_path_name<<"\")\n"<<std::fl
     return stream.str();
   }//valueToString
 
+  //! set numbered image file name from file path format
+  /**
+   * 
+   * \param [out] file_name: image file name with numbers from i  (e.g. ./img_i000.png)
+   * \param [in] file_path_format: format for the image file name (e.g. ./img_i%03d.png)
+   * \param [in] i: dimension index for current file name (e.g. 0)
+  **/
+  bool image_file_name(std::string &file_name,const std::string &file_path_format, int i)
+  {
+    char fileAsCA[512];
+    std::sprintf((char*)fileAsCA/*.c_str()*/,file_path_format.c_str(),i);//e.g. file_path_format="./img_i%03d.png"
+    file_name=fileAsCA;
+    return true;
+  }//image_file_name
+
   //! grab one image
   /** 
    *
@@ -292,14 +307,13 @@ public:
 #if cimg_debug>1
 std::cerr<<class_name<<"::"<<__func__<<": use load image (e.g. image_12345.IMX )\n"<<std::flush;
 #endif
-//! \todo [high] . use current image index
     ///increment temporary image index
     temporary_image_index++;
     ///set temporary image file name
-//! \bug should be format string, so use sprintf instead.
-    std::string file;file.reserve(image_path.size()+64);
-    file=cimg_library::cimg::/*number_*/filename_number(temporary_image_path.c_str(),temporary_image_index,5,(char*)file.c_str());
-    ///check/wait for image file
+//! \todo . should be format string, so use sprintf instead.
+    std::string file;
+    image_file_name(file,temporary_image_path,temporary_image_index);
+    ///check/wait for image file (e.g. using rsync from an remote computer)
 //! \todo [medium] set \c try_nb and \c wait_time as class members.
     int try_index=0,try_nb=20,wait_time=500;
     std::string ls="ls "+file;
