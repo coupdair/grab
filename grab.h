@@ -257,16 +257,20 @@ public:
   {
     ///call parent open function
     Cgrab::open(device_path_name);
-    ///wget
+    ///
+//! \todo [medium] may start at a different number (e.g. setting 0 here, will start at 1) for image file name.
     temporary_image_index=0;
     ///check device validity
 //! \todo [high] check serial
     ///check temporary image folder
-//! \todo [high] check temporary_image_path
-    int error=std::system("ls");
+//! \todo [high] . check temporary_image_path
+    std::string path;path.reserve(temporary_image_path.size());
+    cimg_library::cimg::filename_path(temporary_image_path.c_str(),(char*)path.c_str());
+    std::string ls="ls "+path;
+    int error=std::system(ls.c_str());
     if(error!=0)
     {
-      std::cerr<<"error: Unable to access to folder \""<<temporary_image_path<<"\" (i.e. std::system error code="<<error<<").\n";//e.g. ls /media/data/temp
+      std::cerr<<"error: Unable to access to folder \""<<path<<"\" deduced from \""<<temporary_image_path<<"\" image file name format (i.e. std::system error code="<<error<<").\n";//e.g. ls /media/data/temp
       return false;
     }
     ///print availability
