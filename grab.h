@@ -288,13 +288,23 @@ public:
 #if cimg_debug>1
 std::cerr<<class_name<<"::"<<__func__<<": use load image (e.g. image_12345.IMX )\n"<<std::flush;
 #endif
+//! \todo [high] . use current image index
     ///increment temporary image index
     temporary_image_index++;
     ///set temporary image file name
-//! \todo [high] use current image index
 //! \bug should be format string, so use sprintf instead.
     std::string file;file.reserve(image_path.size()+64);
     file=cimg_library::cimg::/*number_*/filename_number(temporary_image_path.c_str(),temporary_image_index,5,(char*)file.c_str());
+    ///check/wait for image file
+//! \todo [medium] set \c try_nb and \c wait_time as class members.
+    int try_index=0,try_nb=20,wait_time=500;
+    std::string ls="ls "+file;
+    while(std::system(ls.c_str())!=0)
+    {
+      if(++try_index>try_nb) break;//return false;
+      std::cerr<<"information: wait for \""<<file<<"\" image file (try index="<<try_index<<"/"<<try_nb<<").\r"<<std::flush;
+      cimg_library::cimg::wait(wait_time);
+    }
     ///load image in CImg
     image.load(file.c_str());//e.g. IMX
     return true;

@@ -14,3 +14,6 @@ git commit -a
 ##run Elphel_wget
 ./grab -o image_000.jpg
 
+#test wait for image file
+rm *.imx *.cimg; ./link_imx.sh & ./grab -o image.cimg -X false -n 19
+
