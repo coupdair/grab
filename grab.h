@@ -163,6 +163,7 @@ public:
 std::cerr<<class_name<<"::"<<__func__<<"/device_path_wget=\""<<device_path_wget<<"\"\n"<<std::flush;
 #endif
     ///check device validity
+//! \todo [medium] use temporary image file name (see \c Cgrab_AandDEE_serial::temporary_image_path)
     int error=std::system(device_path_wget.c_str());
     if(error!=0)
     {
@@ -204,7 +205,8 @@ std::cerr<<class_name<<"::"<<__func__<<": use system command execution (i.e. std
       return false;
     }
     ///move image
-//! \todo check image format extention as temporary grab file (e.g. if Elphel camera, .JPG for move).
+//! \todo [medium] use temporary image file name (see \c Cgrab_AandDEE_serial::temporary_image_path)
+//! \todo [medium] check image format extention as temporary grab file (e.g. if Elphel camera, .JPG for move).
     error=std::system(std::string("mv bimg "+image_path).c_str());
     if(error!=0)
     {
@@ -272,13 +274,12 @@ public:
   {
     ///call parent open function
     Cgrab::open(device_path_name);
-    ///
+    ///set temporary image index
 //! \todo [medium] may start at a different number (e.g. setting 0 here, will start at 1) for image file name.
     temporary_image_index=0;
     ///check device validity
-//! \todo [high] check serial
+//! \todo [high] check AandDEE serial
     ///check temporary image folder
-//! \todo [high] . check temporary_image_path
     std::string path;path.reserve(temporary_image_path.size());
     cimg_library::cimg::filename_path(temporary_image_path.c_str(),(char*)path.c_str());
     std::string ls="ls "+path;
@@ -309,11 +310,12 @@ std::cerr<<class_name<<"::"<<__func__<<": use load image (e.g. image_12345.IMX )
 #endif
     ///increment temporary image index
     temporary_image_index++;
+    ///grab image
+//! \todo [high] grab image with AandDEE (i.e. serial call)
     ///set temporary image file name
-//! \todo . should be format string, so use sprintf instead.
     std::string file;
     image_file_name(file,temporary_image_path,temporary_image_index);
-    ///check/wait for image file (e.g. using rsync from an remote computer)
+    ///check/wait for image file (e.g. using rsync from a remote computer)
 //! \todo [medium] set \c try_nb and \c wait_time as class members.
     int try_index=0,try_nb=20,wait_time=500;
     std::string ls="ls "+file;

@@ -105,6 +105,7 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   if(show_help) {/*print_help(std::cerr);*/return 0;}
 //grab device object
   Cgrab_factory grab_factory;
+//! \todo [high] use full factory.
 //  Cgrab *pGrab=grab_factory.create(DeviceType);
   Cgrab_AandDEE_serial *pGrab=new Cgrab_AandDEE_serial;
   pGrab->temporary_image_path=TemporaryImagePath;
