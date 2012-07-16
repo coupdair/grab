@@ -94,6 +94,21 @@ std::cerr<<class_name<<"::"<<__func__<<"(\""<<device_path_name<<"\")\n"<<std::fl
     return true;
   }//image_file_name
 
+  //!check image folder
+  bool check_image_folder(const std:: string &image_path)
+  {
+    std::string path;path.reserve(image_path.size());
+    cimg_library::cimg::filename_path(image_path.c_str(),(char*)path.c_str());
+    std::string ls="ls "+path;
+    int error=std::system(ls.c_str());
+    if(error!=0)
+    {
+      std::cerr<<"error: Unable to access to folder \""<<path<<"\" deduced from \""<<image_path<<"\" image file name format (i.e. std::system error code="<<error<<").\n";//e.g. ls /media/data/temp
+      return false;
+    }
+    return true;
+  }//check_image_folder
+
   //! grab one image
   /** 
    *
@@ -164,6 +179,9 @@ public:
 #if cimg_debug>1
 std::cerr<<class_name<<"::"<<__func__<<"/device_path_wget=\""<<device_path_wget<<"\"\n"<<std::flush;
 #endif
+    ///check temporary image folder
+//! \todo [medium] check image format extention as temporary grab file (e.g. if Elphel camera, .JPG for move).
+    if(!check_image_folder(temporary_image_path)) return false;
     ///check device validity
 //! \todo [medium] use temporary image file name (see \c Cgrab_AandDEE_serial::temporary_image_path)
     int error=std::system(device_path_wget.c_str());
@@ -199,6 +217,11 @@ std::cerr<<class_name<<"::"<<__func__<<"/device_path_wget=\""<<device_path_wget<
 #if cimg_debug>1
 std::cerr<<class_name<<"::"<<__func__<<": use system command execution (i.e. std::system() )\n"<<std::flush;
 #endif
+    ///file name
+    std::string file;
+//! \todo [medium] check extention .JPG
+    //file=image_path;//if .JPG
+    image_file_name(file,temporary_image_path,0);//else
     ///get image
     int error=std::system(device_path_wget.c_str());
     if(error!=0)
@@ -207,17 +230,16 @@ std::cerr<<class_name<<"::"<<__func__<<": use system command execution (i.e. std
       return false;
     }
     ///move image
-//! \todo [medium] use temporary image file name (see \c Cgrab_AandDEE_serial::temporary_image_path)
-//! \todo [medium] check image format extention as temporary grab file (e.g. if Elphel camera, .JPG for move).
-    error=std::system(std::string("mv bimg "+image_path).c_str());
+//! \todo [medium] . use temporary image file name
+    error=std::system(std::string("mv bimg "+file).c_str());
     if(error!=0)
     {
-      std::cerr<<"error: Unable to move image from bimg to "<<image_path<<" (i.e. std::system error code="<<error<<").\n";//e.g. mv bimg ...
+      std::cerr<<"error: Unable to move image from bimg to "<<file<<" (i.e. std::system error code="<<error<<").\n";//e.g. mv bimg ...
       return false;
     }
-    std::cerr<<"information: image saved in \""<<image_path<<"\" file.\n";
+    std::cerr<<"information: image saved in \""<<file<<"\" file.\n";
     ///load image in CImg
-    image.load(image_path.c_str());
+    image.load(file.c_str());
     return true;
   }//grab
 
@@ -282,15 +304,7 @@ public:
     ///check device validity
 //! \todo [high] check AandDEE serial
     ///check temporary image folder
-    std::string path;path.reserve(temporary_image_path.size());
-    cimg_library::cimg::filename_path(temporary_image_path.c_str(),(char*)path.c_str());
-    std::string ls="ls "+path;
-    int error=std::system(ls.c_str());
-    if(error!=0)
-    {
-      std::cerr<<"error: Unable to access to folder \""<<path<<"\" deduced from \""<<temporary_image_path<<"\" image file name format (i.e. std::system error code="<<error<<").\n";//e.g. ls /media/data/temp
-      return false;
-    }
+    check_image_folder(temporary_image_path);
     ///print availability
     std::cerr<<"device is available."<<std::endl;
     return true;
