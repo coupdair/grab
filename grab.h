@@ -14,7 +14,7 @@
 #endif
 
 //serial needed for AandDEE, only.
-//#include "../rs232/serial_factory.h"
+#include "../rs232/serial_factory.h"
 
 class Cgrab
 {
@@ -279,8 +279,8 @@ public:
   //! AandDEE serial device path (e.g. /dev/ttyUSB0)
   //std::string device_path;//of Cgrab class
   //! communication with AandDEE as serial device (e.g. serial named /dev/ttyUSB0; \see device_path )
-//! \todo [medium] communicate with AandDEE.
-//  Cserial* pComAandDEE;
+//! \todo [medium] _ communicate with AandDEE.
+  Cserial* pComAandDEE;
   //! temporary image path (e.g. /media/data/temp/image_%06d.imx filled with an endless loop by rsync , scp, ...)
   //std::string temporary_image_path;//of Cgrab class
   //! temporary image index
@@ -303,7 +303,7 @@ public:
   //! Open grab device
   /** 
    *
-   * @param[in] device_path_name: path of camera (e.g. 192.168.0.9)
+   * @param[in] device_path_name: path of AandDEE serial as commander for a TTL camera (e.g. /dev/ttyUSB0)
    *
    * @return 
    */
@@ -315,7 +315,14 @@ public:
 //! \todo [low] may start at a different number (e.g. setting 0 here, will start at 1) for image file name.
     temporary_image_index=0;
     ///check device validity
-//! \todo [high] check AandDEE serial
+//! \todo [high] . open AandDEE serial
+    ////serial object
+    std::string SerialType="serial_system";//"serial_termios";
+    Cserial_factory serial_factory;
+    pComAandDEE=serial_factory.create(SerialType);
+    ////open
+    if(!pComAandDEE->opens(device_path_name)) return false;
+//! \todo [medium] check AandDEE serial
     ///check temporary image folder
     check_image_folder(temporary_image_path);
     ///print availability
@@ -340,7 +347,9 @@ std::cerr<<class_name<<"::"<<__func__<<": use load image (e.g. image_12345.IMX )
     ///increment temporary image index
     temporary_image_index++;
     ///grab image
-//! \todo [high] grab image with AandDEE (i.e. serial call)
+//! \todo [high] . grab image with AandDEE (i.e. serial call)
+    pComAandDEE->writes("grab");//actually, reset AandDEE !!
+    cimg_library::cimg::wait(2000);
     ///set temporary image file name
     std::string file;
     image_file_name(file,temporary_image_path,temporary_image_index);
