@@ -13,7 +13,11 @@ git commit -a
 #run
 ##run Elphel_wget
 curl http://192.168.0.9/camvc.php?set=0/comp_run:stop/ae:off/iq:100/e:2/bh:1/bv:1/dh:1/dv:1/ww:1280/wh:1024/wl:876/wt:432/comp_run:run
-./grab -o image_%03d.cimg -t image.jpg --device-type grab_WGet --device-path 192.168.0.9 -X false -n 10
+./grab -o image_%02d.cimg -t image.jpg --device-type grab_WGet --device-path 192.168.0.9 -X false -n 10
+###NetCDF
+ls image_??.cimg | ../convert/CImg.convert -i stdin -o image.nc
+ncwa -O -a v,l image.nc image.nc; ncrename -d z,time image.nc
+ncview image.nc &
 
 #test wait for image file
 rm *.imx *.cimg; ./link_imx.sh & ./grab -o image_%03d.cimg -t image_%05d.imx -X false -n 19

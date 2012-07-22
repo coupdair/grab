@@ -180,7 +180,6 @@ public:
 std::cerr<<class_name<<"::"<<__func__<<"/device_path_wget=\""<<device_path_wget<<"\"\n"<<std::flush;
 #endif
     ///check temporary image path format
-//! \todo [medium] v check image format extention as temporary grab file (e.g. if Elphel camera, .JPG for move).
     const char *ext = cimg::filename_split(temporary_image_path.c_str());//,body);
     if(cimg::strncasecmp(ext,"jpg",3))
     {
@@ -227,7 +226,6 @@ std::cerr<<class_name<<"::"<<__func__<<": use system command execution (i.e. std
 #endif
     ///file name
     std::string file;
-//! \todo [medium] v check extention .JPG
     const char *ext = cimg::filename_split(image_path.c_str());
     if(!cimg::strncasecmp(ext,"jpg",3))
     {//save native image (.JPG)
