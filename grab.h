@@ -98,7 +98,14 @@ std::cerr<<class_name<<"::"<<__func__<<"(\""<<device_path_name<<"\")\n"<<std::fl
   bool check_image_folder(const std:: string &image_path)
   {
     std::string path;path.reserve(image_path.size());
+#if version_cimg < 130
     cimg_library::cimg::filename_path(image_path.c_str(),(char*)path.c_str());
+#else
+//! \bug for CImg version 1.4.9 no filename_path function, try to use basename instead !!
+    //cimg_library::cimg::basename(image_path.c_str());
+std::cerr<<"warning: "<<image_path.c_str()<<" not checked, yet !\n"<<std::flush;
+return true;
+#endif
     std::string ls="ls "+path;
     int error=std::system(ls.c_str());
     if(error!=0)
@@ -180,8 +187,12 @@ public:
 std::cerr<<class_name<<"::"<<__func__<<"/device_path_wget=\""<<device_path_wget<<"\"\n"<<std::flush;
 #endif
     ///check temporary image path format
-    const char *ext = cimg::filename_split(temporary_image_path.c_str());//,body);
-    if(cimg::strncasecmp(ext,"jpg",3))
+#if version_cimg < 130
+    const char *ext = cimg_library::cimg::filename_split(temporary_image_path.c_str());//,body);
+#else
+    const char *ext = cimg_library::cimg::split_filename(temporary_image_path.c_str());//,body);
+#endif
+    if(cimg_library::cimg::strncasecmp(ext,"jpg",3))
     {
 //! \todo [low] replace bad extention ?!
 std::cerr<<"error: bad file name extention (should be .JPG, but \""<<temporary_image_path<<"\" provided)\n";
@@ -226,8 +237,12 @@ std::cerr<<class_name<<"::"<<__func__<<": use system command execution (i.e. std
 #endif
     ///file name
     std::string file;
-    const char *ext = cimg::filename_split(image_path.c_str());
-    if(!cimg::strncasecmp(ext,"jpg",3))
+#if version_cimg < 130
+    const char *ext = cimg_library::cimg::filename_split(image_path.c_str());
+#else
+    const char *ext = cimg_library::cimg::split_filename(image_path.c_str());
+#endif
+    if(!cimg_library::cimg::strncasecmp(ext,"jpg",3))
     {//save native image (.JPG)
       file=image_path;//e.g. .JPG
       temporary_image_path.clear();//! empty \c temporary_image_path as it will not be used
