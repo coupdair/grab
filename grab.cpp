@@ -120,6 +120,7 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   for(int i=0;i<ImageNumber;++i)
   {//do
     pGrab->image_file_name(file,ImagePath,i);
+pGrab->temporary_image_index++;//DaVis and AandDEE reset
     if(!pGrab->grab(image,file.c_str())) return 1;//might use temporary image
     image.channel(0);//set to grey level, only
     //display 2D image

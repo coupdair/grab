@@ -27,11 +27,12 @@ public:
   std::string class_version;
   //! temporary image path (e.g. "bimg.jpg" for Elphel camera or "/media/data/temp/image_%05d.imx" for FlowMaster camera)
   std::string temporary_image_path;
+  //! temporary image index
+  int temporary_image_index;
 private:
   //! grab type: wget or AandDEEserial or OpenCV or rtsp
 //! \todo implement v wget or . AandDEEserial or _ OpenCV or _ rtsp
   std::string device_path;
-
 public:
   //! constructor
   /**
@@ -60,6 +61,9 @@ std::cerr<<class_name<<"::"<<__func__<<"(\""<<device_path_name<<"\")\n"<<std::fl
     ///check \c device_path validity
     if(device_path_name.empty()) return false;
     device_path=device_path_name;
+    ///set temporary image index
+//! \todo [low] may start at a different number (e.g. setting 0 here, will start at 1) for image file name.
+    temporary_image_index=0;
     return true;
   }//open
 
@@ -299,7 +303,7 @@ public:
   //! temporary image path (e.g. /media/data/temp/image_%06d.imx filled with an endless loop by rsync , scp, ...)
   //std::string temporary_image_path;//of Cgrab class
   //! temporary image index
-  int temporary_image_index;
+  //int temporary_image_index;//of Cgrab class
 public:
   //! constructor
   /**
@@ -326,9 +330,6 @@ public:
   {
     ///call parent open function
     Cgrab::open(device_path_name);
-    ///set temporary image index
-//! \todo [low] may start at a different number (e.g. setting 0 here, will start at 1) for image file name.
-    temporary_image_index=0;
     ///check device validity
 //! \todo [high] . open AandDEE serial
     ////serial object
