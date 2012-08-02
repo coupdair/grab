@@ -410,7 +410,7 @@ std::cerr<<class_name<<"::"<<__func__<<": use load image (e.g. image_12345.IMX )
     image_file_name(file,temporary_image_path,temporary_image_index);
     ///check/wait for image file (e.g. using rsync from a remote computer)
 //! \todo [medium] set \c try_nb and \c wait_time as class members.
-    int try_index=0,try_nb=20,wait_time=500;
+    int try_index=0,try_nb=50,wait_time=500;
     std::string ls="ls "+file;
     while(std::system(ls.c_str())!=0)
     {
