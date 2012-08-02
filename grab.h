@@ -29,6 +29,19 @@ public:
   std::string temporary_image_path;
   //! temporary image index
   int temporary_image_index;
+  //! image sequence i.e. several image record (e.g. for same scene statistics)
+  int sequence_number;
+  int sequence_index;
+  virtual bool sequence_initialisation(int size)
+  {
+#if cimg_debug>1
+std::cerr<<class_name<<"::"<<__func__<<"("<<size<<")\n"<<std::flush;
+#endif
+    sequence_number=size;
+    sequence_index=-1;
+    return true;
+  }//sequence_initialisation
+
 private:
   //! grab type: wget or AandDEEserial or OpenCV or rtsp
 //! \todo implement v wget or . AandDEEserial or _ OpenCV or _ rtsp
@@ -64,6 +77,8 @@ std::cerr<<class_name<<"::"<<__func__<<"(\""<<device_path_name<<"\")\n"<<std::fl
     ///set temporary image index
 //! \todo [low] may start at a different number (e.g. setting 0 here, will start at 1) for image file name.
     temporary_image_index=0;
+    sequence_number=-1;
+    sequence_index=-1;
     return true;
   }//open
 
@@ -345,7 +360,23 @@ public:
     std::cerr<<"device is available."<<std::endl;
     return true;
   }//open
-  
+
+  //! init a sequence record
+  /** 
+   *
+   * @param[in] size = number of images to record in the sequence
+   *
+   * @return 
+   */
+  bool sequence_initialisation(int size)
+  {
+    Cgrab::sequence_initialisation(size);
+    pComAandDEE->writes("grab");//actually, reset AandDEE !!
+    cimg_library::cimg::wait(2000);
+    temporary_image_index++;//DaVis and AandDEE reset
+    return true;
+  }//sequence_initialisation
+
   //! grab one image
   /** 
    *
@@ -363,9 +394,17 @@ std::cerr<<class_name<<"::"<<__func__<<": use load image (e.g. image_12345.IMX )
     ///increment temporary image index
     temporary_image_index++;
     ///grab image
-//! \todo [high] . grab image with AandDEE (i.e. serial call)
-    pComAandDEE->writes("grab");//actually, reset AandDEE !!
-    cimg_library::cimg::wait(2000);
+//! \todo [high] v single   grab image with AandDEE (i.e. serial call, no reset prior to the following one)
+    if(sequence_number==-1)
+    {
+      pComAandDEE->writes("grab");//actually, reset AandDEE !!
+      cimg_library::cimg::wait(2000);
+    }//single image
+    else
+    {
+      //DO NOT forget to call sequence_initialisation prior to the sequence loop.
+      sequence_index++;
+    }//image sequence
     ///set temporary image file name
     std::string file;
     image_file_name(file,temporary_image_path,temporary_image_index);

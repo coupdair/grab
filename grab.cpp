@@ -117,6 +117,7 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   //cimg_library::CImg<int> min;
   //cimg_library::CImg<int> max;
   std::string file;file.reserve(ImagePath.size()+64);
+//! \todo [low] _ do the same with sequence framework of Cgrab, so have 2 possibilities for grabing a mean image.
   for(int i=0;i<ImageNumber;++i)
   {//do
     pGrab->image_file_name(file,ImagePath,i);
