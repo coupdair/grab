@@ -29,6 +29,8 @@ public:
   std::string temporary_image_path;
   //! temporary image index
   int temporary_image_index;
+//! temporary image name from temporary_image_path and temporary_image_index
+std::string temporary_image_name;
   //! image sequence i.e. several image record (e.g. for same scene statistics)
   int sequence_number;
   int sequence_index;
@@ -408,9 +410,10 @@ std::cerr<<class_name<<"::"<<__func__<<": use load image (e.g. image_12345.IMX )
     ///set temporary image file name
     std::string file;
     image_file_name(file,temporary_image_path,temporary_image_index);
+temporary_image_name=file;
     ///check/wait for image file (e.g. using rsync from a remote computer)
 //! \todo [medium] set \c try_nb and \c wait_time as class members.
-    int try_index=0,try_nb=50,wait_time=500;
+    int try_index=0,try_nb=12345,wait_time=500;
     std::string ls="ls "+file;
     while(std::system(ls.c_str())!=0)
     {
@@ -418,6 +421,8 @@ std::cerr<<class_name<<"::"<<__func__<<": use load image (e.g. image_12345.IMX )
       std::cerr<<"information: wait for \""<<file<<"\" image file (try index="<<try_index<<"/"<<try_nb<<").\r"<<std::flush;
       cimg_library::cimg::wait(wait_time);
     }
+    //just wait for finishing transfert
+    cimg_library::cimg::wait(wait_time);
     ///load image in CImg
     image.load(file.c_str());//e.g. IMX
     return true;
