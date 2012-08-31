@@ -1,0 +1,4 @@
+. grab.save (if need save faking)
+_ camera bad pixel map (or coordinates) and value
+_ factory list
+
