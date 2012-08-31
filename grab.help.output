@@ -5,13 +5,13 @@
         ./grab -n 10 --device-type grab_WGet
         ./grab -n 10 --device-type grab_image_file #to do off line run or test
  version: v0.1.8
- compilation date:  (Aug 27 2012, 17:39:45)
+ compilation date:  (Aug 31 2012, 12:07:47)
 
-    --help   = true         : help (or -h option)
-    --info   = false        : show compilation options (or -I option)
-    --device-type = grab_AandDEE_serial : type of grab device (e.g. grab_image_file or grab_WGet or grab_AandDEE_serial -or Elphel_OpenCV or Elphel_rtsp-).
-    --device-path = /dev/ttyUSB0 : path of grab device (e.g. 192.168.0.9 or /dev/ttyUSB0).
-    -n       = 10           : number of images to acquire.
-    -o       = image_%03d.cimg : path for image(s) (i.e. image_%03d.cimg e.g. image_000.cimg; note: trouble with TIF and PNG for 16bit images).
-    -t       = image_%05d.imx : temporary path for image(s) (i.e. image_%05d.imx e.g. image_000001.imx).
-    -X       = true         : display image and graph (e.g. -X false for no display).
+    --help           true                     help (or -h option)
+    --info           false                    show compilation options (or -I option)
+    --device-type    grab_AandDEE_serial      type of grab device (e.g. grab_image_file or grab_WGet or grab_AandDEE_serial -or Elphel_OpenCV or Elphel_rtsp-).
+    --device-path    /dev/ttyUSB0             path of grab device (e.g. 192.168.0.9 or /dev/ttyUSB0).
+    -n               10                       number of images to acquire.
+    -o               image_%03d.cimg          path for image(s) (i.e. image_%03d.cimg e.g. image_000.cimg; note: trouble with TIF and PNG for 16bit images).
+    -t               image_%05d.imx           temporary path for image(s) (i.e. image_%05d.imx e.g. image_000001.imx).
+    -X               true                     display image and graph (e.g. -X false for no display).
