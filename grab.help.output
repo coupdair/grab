@@ -4,8 +4,8 @@
  usage: ./grab -h -I
         ./grab -n 10 --device-type grab_WGet
         ./grab -n 10 --device-type grab_image_file #to do off line run or test
- version: v0.1.8
- compilation date:  (Aug 31 2012, 12:07:47)
+ version: v0.1.9
+ compilation date:  (Sep  4 2012, 17:05:54)
 
     --help           true                     help (or -h option)
     --info           false                    show compilation options (or -I option)

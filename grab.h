@@ -140,7 +140,9 @@ return true;
   //! grab one image
   /** 
    *
-   * @param[in] message= string to send to serial port  
+   * @param[out] image = image of grabing content
+   * @param[in;option] image_path = file name of grabed image (might be saved depending of object type)
+   * \note on the contrary in this class, image is loaded from the \c image_path file name.
    *
    * @return 
    */
@@ -156,6 +158,41 @@ std::cerr<<class_name<<"::"<<__func__<<"(CImg<"<<image.pixel_type()<<">,\""<<ima
     return true;
   }//grab
 /**/
+  //! reference of save image
+  /** 
+   * image save reference function for derived classes.
+   * @param[in] image = image to save
+   * @param[in] image_path = file name of image to save
+   * \note especially in this class, this function should never be used, but it might be used in derived classes.
+   *
+   * @return 
+   */
+  virtual bool save_image(cimg_library::CImg<int> &image,const std::string &image_path)
+  {
+#if cimg_debug>1
+std::cerr<<class_name<<"::"<<__func__<<" image saving.\n"<<std::flush;
+#endif
+    image.save(image_path.c_str());//might throw exception on error
+    return true;
+  }//save_image
+  //! save image
+  /** 
+   * save image.
+   * @param[in] image = image to save
+   * @param[in] image_path = file name of image to save
+   * \note especially in this class, image is not saved as it fakes a saving (prior to this call it might have loaded the correponding file).
+   *
+   * @return 
+   */
+  virtual bool save(cimg_library::CImg<int> &image,const std::string &image_path)
+  {
+#if cimg_debug>1
+std::cerr<<class_name<<"::"<<__func__<<" empty (i.e. fake image saving)\n"<<std::flush;
+#endif
+    //this->save_image(image_path.c_str());
+    return true;
+  }//save
+
   //! Close grab
   /** 
    *
@@ -292,6 +329,23 @@ std::cerr<<class_name<<"::"<<__func__<<": use system command execution (i.e. std
     return true;
   }//grab
 
+  //! save image
+  /** 
+   * save image.
+   * @param[in] image = image to save
+   * @param[in] image_path = file name of image to save
+   *
+   * @return 
+   */
+  virtual bool save(cimg_library::CImg<int> &image,const std::string &image_path)
+  {
+#if cimg_debug>1
+std::cerr<<class_name<<"::"<<__func__<<" image saving.\n"<<std::flush;
+#endif
+    this->save_image(image,image_path);
+    return true;
+  }//save
+
   //! Close grab
   /** 
    *
@@ -427,6 +481,23 @@ temporary_image_name=file;
     image.load(file.c_str());//e.g. IMX
     return true;
   }//grab
+
+  //! save image
+  /** 
+   * save image.
+   * @param[in] image = image to save
+   * @param[in] image_path = file name of image to save
+   *
+   * @return 
+   */
+  virtual bool save(cimg_library::CImg<int> &image,const std::string &image_path)
+  {
+#if cimg_debug>1
+std::cerr<<class_name<<"::"<<__func__<<" image saving.\n"<<std::flush;
+#endif
+    this->save_image(image,image_path);
+    return true;
+  }//save
 
   //! Close grab
   /** 
