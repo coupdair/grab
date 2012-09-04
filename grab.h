@@ -25,6 +25,8 @@ public:
 #endif
   //! class (or library) version for information only
   std::string class_version;
+  //! specify if class is grabing or loading image
+  bool grabed_image;
   //! temporary image path (e.g. "bimg.jpg" for Elphel camera or "/media/data/temp/image_%05d.imx" for FlowMaster camera)
   std::string temporary_image_path;
   //! temporary image index
@@ -59,6 +61,8 @@ public:
     class_name="Cgrab";
 #endif
     class_version=GRAB_VERSION;
+    ///grab/load image flag
+    grabed_image=true;//generally, class is a camera (i.e. grab)
   }//constructor
 
   //! Open grab device
@@ -81,6 +85,8 @@ std::cerr<<class_name<<"::"<<__func__<<"(\""<<device_path_name<<"\")\n"<<std::fl
     temporary_image_index=0;
     sequence_number=-1;
     sequence_index=-1;
+    ///grab/load image flag
+    //grabed_image=false;//for load_from_file class
     return true;
   }//open
 
@@ -155,6 +161,8 @@ std::cerr<<class_name<<"::"<<__func__<<"(CImg<"<<image.pixel_type()<<">,\""<<ima
 #endif
     ///load image in CImg
     image.load(image_path.c_str());
+    ///grab/load image flag
+    grabed_image=false;
     return true;
   }//grab
 /**/
