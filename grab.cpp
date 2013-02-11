@@ -84,7 +84,8 @@ int main(int argc, char *argv[])
   cimg_usage(std::string("grab program of the Laboratory of Mechanics in Lille (LML) is intended to image acquisition from camera device, \
 it uses different GNU libraries (see --info option)\n\n \
 usage: ./grab -h -I\n \
-       ./grab -n 10 --device-type grab_WGet\n \
+       ./grab -n 10 --device-type grab_WGet --device-path 192.168.0.9 -t tmp_image.jpg #ethernet camera such as Elphel\n \
+       ./grab -n 10 --device-type grab_AandDEE_serial --device-path /dev/ttyUSB0 #TTL trigger for external camera driver\n \
        ./grab -n 10 --device-type grab_image_file #to do off line run or test\n \
 version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
             ).c_str());//cimg_usage
@@ -94,12 +95,12 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   bool show_info=cimg_option("-I",false,NULL);//-I hidden option
   if( cimg_option("--info",show_info,"show compilation options (or -I option)") ) {show_info=true;cimg_library::cimg::info();}//same --info or -I option
   ///device
-  const std::string DeviceType=cimg_option("--device-type","grab_AandDEE_serial","type of grab device (e.g. grab_image_file or grab_WGet or grab_AandDEE_serial -or Elphel_OpenCV or Elphel_rtsp-).");
-  const std::string DevicePath=cimg_option("--device-path","/dev/ttyUSB0","path of grab device (e.g. 192.168.0.9 or /dev/ttyUSB0).");
+  const std::string DeviceType=cimg_option("--device-type","grab_WGet","type of grab device (e.g. grab_image_file or grab_WGet or grab_AandDEE_serial -or Elphel_OpenCV or Elphel_rtsp-).");
+  const std::string DevicePath=cimg_option("--device-path","192.168.0.9","path of grab device (e.g. 192.168.0.9 or /dev/ttyUSB0).");
   ///image
   const int ImageNumber=cimg_option("-n",10,"number of images to acquire.");
-  const std::string ImagePath=cimg_option("-o","image_%03d.cimg","path for image(s) (i.e. image_%03d.cimg e.g. image_000.cimg; note: trouble with TIF and PNG for 16bit images).");
-  const std::string TemporaryImagePath=cimg_option("-t","image_%05d.imx","temporary path for image(s) (i.e. image_%05d.imx e.g. image_000001.imx).");
+  const std::string ImagePath=cimg_option("-o","image_%03d.cimg","path for image(s) (e.g. image_%03d.cimg for image_000.cimg).");
+  const std::string TemporaryImagePath=cimg_option("-t","tmp_image.jpg","temporary path for image(s) (e.g. image_%05d.imx for image_000001.imx (using LaVision/DaVis) or tmp_image.jpg using Elphel).");
   const bool display=cimg_option("-X",true,"display image and graph (e.g. -X false for no display).");
     ///stop if help requested
   if(show_help) {/*print_help(std::cerr);*/return 0;}

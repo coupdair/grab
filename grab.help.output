@@ -2,16 +2,17 @@
  grab : grab program of the Laboratory of Mechanics in Lille (LML) is intended to image acquisition from camera device, it uses different GNU libraries (see --info option)
 
  usage: ./grab -h -I
-        ./grab -n 10 --device-type grab_WGet
+        ./grab -n 10 --device-type grab_WGet --device-path 192.168.0.9 -t tmp_image.jpg #ethernet camera such as Elphel
+        ./grab -n 10 --device-type grab_AandDEE_serial --device-path /dev/ttyUSB0 #TTL trigger for external camera driver
         ./grab -n 10 --device-type grab_image_file #to do off line run or test
  version: v0.2.0
- compilation date:  (Feb 11 2013, 16:24:05)
+ compilation date:  (Feb 11 2013, 21:28:51)
 
     --help           true                     help (or -h option)
     --info           false                    show compilation options (or -I option)
-    --device-type    grab_AandDEE_serial      type of grab device (e.g. grab_image_file or grab_WGet or grab_AandDEE_serial -or Elphel_OpenCV or Elphel_rtsp-).
-    --device-path    /dev/ttyUSB0             path of grab device (e.g. 192.168.0.9 or /dev/ttyUSB0).
+    --device-type    grab_WGet                type of grab device (e.g. grab_image_file or grab_WGet or grab_AandDEE_serial -or Elphel_OpenCV or Elphel_rtsp-).
+    --device-path    192.168.0.9              path of grab device (e.g. 192.168.0.9 or /dev/ttyUSB0).
     -n               10                       number of images to acquire.
-    -o               image_%03d.cimg          path for image(s) (i.e. image_%03d.cimg e.g. image_000.cimg; note: trouble with TIF and PNG for 16bit images).
-    -t               image_%05d.imx           temporary path for image(s) (i.e. image_%05d.imx e.g. image_000001.imx).
+    -o               image_%03d.cimg          path for image(s) (e.g. image_%03d.cimg for image_000.cimg).
+    -t               tmp_image.jpg            temporary path for image(s) (e.g. image_%05d.imx for image_000001.imx (using LaVision/DaVis) or tmp_image.jpg using Elphel).
     -X               true                     display image and graph (e.g. -X false for no display).
