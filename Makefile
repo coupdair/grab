@@ -36,7 +36,7 @@ lavision: Makefile
 	rm ../grab/obj/Read_Examples.o
 
 grab: grab.cpp grab.h Makefile ./obj/ReadIM7.o
-	$(CPP) $(OPT) grab.cpp ./obj/*.o -o $@
+	$(CPP) grab.cpp -o $@ $(OPT) ./obj/*.o
 
 doc: grab.Doxygen grab.cpp grab.h Makefile
 	./doxIt.sh
