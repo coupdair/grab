@@ -26,3 +26,23 @@ for((;;)); do rsync -var 134.206.140.76:/cygwin/d/image/image_?????.imx ./image/
 #test wait for image file
 rm *.imx *.cimg; ./link_imx.sh & ./grab -o image_%03d.cimg -t image_%05d.imx -X false -n 19
 
+#test 5Hz frequency
+./grab -n 50 -X false 2>&1 | grep reload | uniq -c && ls -la *.cimg --full-time | cut -d' ' -f7 | uniq -c
+
+e.g.
+     52 get next image (i.e. reload)
+      2 14:07:08.000000000
+      4 14:07:09.000000000
+      5 14:07:10.000000000
+      5 14:07:11.000000000
+      6 14:07:12.000000000
+      3 14:07:13.000000000
+      4 14:07:14.000000000
+      6 14:07:15.000000000
+      4 14:07:16.000000000
+      5 14:07:17.000000000
+      6 14:07:18.000000000
+
+number of reload 52/50 (program is going faster than camera, that is good)
+number of image is within [4-6]Hz for 5Hz, which is ok.
+

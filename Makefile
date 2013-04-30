@@ -1,7 +1,7 @@
 PROGRAMS = version lavision grab  
 DOCUMENTATIONS = doc
 
-version = v0.2.0
+version = v0.2.0.dev
 #version_cimg = 125
 version_cimg = 149
 version_rs232=`cat ../rs232/VERSION`
@@ -17,7 +17,7 @@ OPT = -Dcimg_display=0 -Dcimg_debug=2 -Dcimg_use_vt100 $(OPT_LIBRARY) $(OPT_FORM
 OPT = $(OPT_XWINDOWS)  -Dcimg_debug=2 -Dcimg_use_vt100 $(OPT_LIBRARY) $(OPT_FORMAT) -Dversion_cimg=$(version_cimg)
 
 CC = gcc
-CPP = g++
+CPP = g++ -O0
 
 all: $(PROGRAMS) $(DOCUMENTATIONS)
 

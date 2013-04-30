@@ -111,7 +111,7 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
 //open
   if(!pGrab->open(DevicePath)) return 1;
 //get
-  cimg_library::CImg<int> image;
+  cimg_library::CImgList<int> image(2);//index: 0 current, 1 previous
   //int ymax=0;
   //cimg_library::CImg<int> profile;
   //cimg_library::CImg<float> mean;
@@ -123,17 +123,34 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   {//do
     pGrab->image_file_name(file,ImagePath,i);
 pGrab->temporary_image_index++;//DaVis and AandDEE reset
-    if(!pGrab->grab(image,file.c_str())) return 1;//might use temporary image
-    image.channel(0);//set to grey level, only
+    //get next image with check (i.e. grab single time image)
+    int loop=false;
+    do
+    {//get next image with check (i.e. grab single time image)
+      if(loop) std::cerr<<"\n\nget next image (i.e. reload)\n\n"<<std::flush;
+      if(!pGrab->grab(image[0],file.c_str())) return 1;//might use temporary image
+      image[0].channel(0);//set to grey level, only
+      //check
+      if(image[1].is_empty())
+      {//first loop
+        image[1]=image[0];//copy current to previous
+        //loop=false;
+      }
+      else
+      {//check if any pixel value difference
+        cimg_forXY(image[0],x,y) if(image[0](x,y)==image[1](x,y)) loop=true; else loop=false;
+//cimg_for_in3XY
+      }
+    }while(loop);
     //display 2D image
-    if(display) image.display(file.c_str());
+    if(display) image[0].display(file.c_str());
 /*
     if(i==0)
     {//search maximum for first image only
-      cimg_library::CImg<float> stat=image.get_stats();
+      cimg_library::CImg<float> stat=image[0].get_stats();
       ymax=stat[9];
     }//max
-    profile=image.get_crop(0,ymax,image.width()-1,ymax);//.get_line(ymax);
+    profile=image[0].get_crop(0,ymax,image[0].width()-1,ymax);//.get_line(ymax);
     if(i==0)
     {
       min=max=mean=profile;
@@ -145,7 +162,9 @@ pGrab->temporary_image_index++;//DaVis and AandDEE reset
       max=profile.get_max(max);
     }
 */
-    if(!pGrab->temporary_image_path.empty()) image.save(file.c_str());//use temporary image, so save final record
+    if(!pGrab->temporary_image_path.empty()) image[0].save(file.c_str());//use temporary image, so save final record
+    //copy current to previous for next loop (i.e. fast swap previous/current)
+    image[1].swap(image[0]);
   }//done
 /*
   //mean
