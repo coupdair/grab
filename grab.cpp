@@ -138,8 +138,8 @@ pGrab->temporary_image_index++;//DaVis and AandDEE reset
       }
       else
       {//check if any pixel value difference
-        cimg_forXY(image[0],x,y) if(image[0](x,y)==image[1](x,y)) loop=true; else loop=false;
-//cimg_for_in3XY
+        //cimg_forXY(image[0],x,y) if(image[0](x,y)==image[1](x,y)) loop=true; else loop=false;//loop on entire image
+        cimg_for_inXY(image[0],1,1,4,4,x,y) if(image[0](x,y)==image[1](x,y)) loop=true; else loop=false;//loop on 3x3 pixel
       }
     }while(loop);
     //display 2D image

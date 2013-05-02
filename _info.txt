@@ -27,6 +27,9 @@ for((;;)); do rsync -var 134.206.140.76:/cygwin/d/image/image_?????.imx ./image/
 rm *.imx *.cimg; ./link_imx.sh & ./grab -o image_%03d.cimg -t image_%05d.imx -X false -n 19
 
 #test 5Hz frequency
+curl http://192.168.0.9/camvc.php?set=0/comp_run:stop/ae:off/iq:100/bh:1/bv:1/dh:1/dv:1/comp_run:run
+curl http://192.168.0.9/camvc.php?set=0/comp_run:stop/ae:off/ww:1024/wh:192/wl:768/wt:768/e:123/comp_run:run
+mplayer -vo gl rtsp://192.168.0.9
 ./grab -n 50 -X false 2>&1 | grep reload | uniq -c && ls -la *.cimg --full-time | cut -d' ' -f7 | uniq -c
 
 e.g.

@@ -6,7 +6,7 @@
         ./grab -n 10 --device-type grab_AandDEE_serial --device-path /dev/ttyUSB0 #TTL trigger for external camera driver
         ./grab -n 10 --device-type grab_image_file #to do off line run or test
  version: v0.2.0.dev
- compilation date:  (Apr 30 2013, 10:40:19)
+ compilation date:  (Apr 30 2013, 14:19:43)
 
     --help           true                     help (or -h option)
     --info           false                    show compilation options (or -I option)

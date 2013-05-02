@@ -17,7 +17,7 @@ OPT = -Dcimg_display=0 -Dcimg_debug=2 -Dcimg_use_vt100 $(OPT_LIBRARY) $(OPT_FORM
 OPT = $(OPT_XWINDOWS)  -Dcimg_debug=2 -Dcimg_use_vt100 $(OPT_LIBRARY) $(OPT_FORMAT) -Dversion_cimg=$(version_cimg)
 
 CC = gcc
-CPP = g++ -O0
+CPP = g++ -O3
 
 all: $(PROGRAMS) $(DOCUMENTATIONS)
 
