@@ -98,10 +98,11 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   const std::string DeviceType=cimg_option("--device-type","grab_WGet","type of grab device (e.g. grab_image_file or grab_WGet or grab_AandDEE_serial -or Elphel_OpenCV or Elphel_rtsp-).");
   const std::string DevicePath=cimg_option("--device-path","192.168.0.9","path of grab device (e.g. 192.168.0.9 or /dev/ttyUSB0).");
   ///image
-  const int ImageNumber=cimg_option("-n",10,"number of images to acquire.");
+  int ImageNumber=cimg_option("-n",10,"number of images to acquire.");
   const std::string ImagePath=cimg_option("-o","image_%03d.cimg","path for image(s) (e.g. image_%03d.cimg for image_000.cimg).");
   const std::string TemporaryImagePath=cimg_option("-t","tmp_image.jpg","temporary path for image(s) (e.g. image_%05d.imx for image_000001.imx (using LaVision/DaVis) or tmp_image.jpg using Elphel).");
   const bool display=cimg_option("-X",true,"display image and graph (e.g. -X false for no display).");
+  const bool continuous_display=cimg_option("-c",true,"continuous image display (i.e. live display).");
     ///stop if help requested
   if(show_help) {/*print_help(std::cerr);*/return 0;}
 //grab device object
@@ -118,6 +119,9 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   //cimg_library::CImg<int> min;
   //cimg_library::CImg<int> max;
   std::string file;file.reserve(ImagePath.size()+64);
+//display
+  cimg_library::CImg<unsigned char> visu;
+  cimg_library::CImgDisplay live_display;std::string title;title.reserve(128);std::string progress="-\\|/";int prog=0;
 //! \todo [low] _ do the same with sequence framework of Cgrab, so have 2 possibilities for grabing a mean image.
   for(int i=0;i<ImageNumber;++i)
   {//do
@@ -143,7 +147,22 @@ pGrab->temporary_image_index++;//DaVis and AandDEE reset
       }
     }while(loop);
     //display 2D image
-    if(display) image[0].display(file.c_str());
+    if(display)
+    {
+      if(continuous_display)
+      {
+        //display
+        visu.assign(image[0].width(),image[0].height(),1,3);
+        visu=image[0];
+        title="live ";title+=progress[prog];if(++prog>progress.size()-1) prog=0;
+        live_display.set_title(title.c_str()).display(visu);
+        //checks
+        if(live_display.is_closed()||live_display.is_keyESC()||live_display.is_keyQ()) ImageNumber=-1;//exit
+        if(live_display.is_keyS()||live_display.is_keyP()) {image[0].display("grab Stopped/Paused");live_display.set_key();}//stop and display values
+        i=0;//loop forever
+      }
+      else image[0].display(file.c_str());
+    }
 /*
     if(i==0)
     {//search maximum for first image only
@@ -162,7 +181,7 @@ pGrab->temporary_image_index++;//DaVis and AandDEE reset
       max=profile.get_max(max);
     }
 */
-    if(!pGrab->temporary_image_path.empty()) image[0].save(file.c_str());//use temporary image, so save final record
+    if(!continuous_display) if(!pGrab->temporary_image_path.empty()) image[0].save(file.c_str());//use temporary image, so save final record
     //copy current to previous for next loop (i.e. fast swap previous/current)
     image[1].swap(image[0]);
   }//done

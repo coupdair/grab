@@ -6,7 +6,7 @@
         ./grab -n 10 --device-type grab_AandDEE_serial --device-path /dev/ttyUSB0 #TTL trigger for external camera driver
         ./grab -n 10 --device-type grab_image_file #to do off line run or test
  version: v0.2.0.dev
- compilation date:  (Apr 30 2013, 14:19:43)
+ compilation date:  (May  2 2013, 22:39:33)
 
     --help           true                     help (or -h option)
     --info           false                    show compilation options (or -I option)
@@ -16,3 +16,4 @@
     -o               image_%03d.cimg          path for image(s) (e.g. image_%03d.cimg for image_000.cimg).
     -t               tmp_image.jpg            temporary path for image(s) (e.g. image_%05d.imx for image_000001.imx (using LaVision/DaVis) or tmp_image.jpg using Elphel).
     -X               true                     display image and graph (e.g. -X false for no display).
+    -c               true                     continuous image display (i.e. live display).
