@@ -162,21 +162,23 @@ pGrab->temporary_image_index++;//DaVis and AandDEE reset
       if(reduce_display)
       {
         //reduce along y direction
-        reduce.assign(image[0].width());
+        reduce.assign(image[0].width(),1,1,1, 0);
         cimg_forXY(image[0],x,y)
         {
           reduce(x)+=image[0](x,y);
         }
         //create profil
         profile.assign(reduce.width(),1,1,3, 0);
+//! \todo _ add reduce RGB cycle v : cycle=1 or 2< or 3
         profile.draw_image(0,0,0,0,reduce);//R
         //draw graph(s)
         const int height=256;
         graph.assign(profile.width(),height,1,3, 255);//white background
-        //graph.draw_grid(-10,-10,0,0,false,true,palette(0,3)/*black*/,0.2f,0x33333333,0x33333333);
+//        graph.draw_grid(-10,-10,0,0,false,true,palette(0,3)/*black*/,0.2f,0x33333333,0x33333333);
         cimg_forC(profile,c) graph.draw_graph(profile.get_shared_channel(c),&palette(0,c));//,1,plot_type,vertex_type,nymax,nymin,false);
         //set what to display
-        to_display=graph.get_shared();
+        cimg_library::CImgList<unsigned char> compose(graph.get_shared(),image[0].get_shared());
+        to_display=compose.get_append('y');
       }//reduce
       else
         //set what to display
