@@ -104,6 +104,7 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   const bool display=cimg_option("-X",true,"display image and graph (e.g. -X false for no display).");
   const bool continuous_display=cimg_option("--continuous",true,"continuous image display (i.e. live display).");
   const bool reduce_display=cimg_option("--reduce",true,"reduce image and live display it.");
+  const int  reduce_cycle=cimg_option("--reduce-cycle",1,"number of graph to plot for live reduce mode.");
     ///stop if help requested
   if(show_help) {/*print_help(std::cerr);*/return 0;}
 //grab device object
@@ -168,9 +169,10 @@ pGrab->temporary_image_index++;//DaVis and AandDEE reset
           reduce(x)+=image[0](x,y);
         }
         //create profil
-        profile.assign(reduce.width(),1,1,3, 0);
-//! \todo _ add reduce RGB cycle v : cycle=1 or 2< or 3
-        profile.draw_image(0,0,0,0,reduce);//R
+        profile.assign(reduce.width(),1,1,3);
+        if(i==0) profile.fill(0);
+//! \todo . add reduce RGB cycle v : cycle=1 or 2< or 3
+        profile.draw_image(0,0,0,i,reduce);//R,G,B
         //draw graph(s)
         const int height=256;
         graph.assign(profile.width(),height,1,3, 255);//white background
@@ -194,7 +196,7 @@ pGrab->temporary_image_index++;//DaVis and AandDEE reset
         //checks
         if(live_display.is_closed()||live_display.is_keyESC()||live_display.is_keyQ()) ImageNumber=-1;//exit
         if(live_display.is_keyS()||live_display.is_keyP()) {to_display.display("grab Stopped/Paused");live_display.set_key();}//stop and display values
-        i=0;//loop forever
+        if(i>reduce_cycle-2) i=-1;//loop forever (and used also for reduce cycle, else code i=0; is default)
       }//continuous
       else to_display.display(file.c_str());
     }
