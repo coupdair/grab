@@ -103,6 +103,7 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   const std::string TemporaryImagePath=cimg_option("-t","tmp_image.jpg","temporary path for image(s) (e.g. image_%05d.imx for image_000001.imx (using LaVision/DaVis) or tmp_image.jpg using Elphel).");
   const bool display=cimg_option("-X",true,"display image and graph (e.g. -X false for no display).");
   const bool continuous_display=cimg_option("-c",true,"continuous image display (i.e. live display).");
+  const float rotation=cimg_option("-r",0.0,"image rotation for live display (e.g. 180,-90,90 degree angles are the faster).");
     ///stop if help requested
   if(show_help) {/*print_help(std::cerr);*/return 0;}
 //grab device object
@@ -151,9 +152,10 @@ pGrab->temporary_image_index++;//DaVis and AandDEE reset
     {
       if(continuous_display)
       {
+        //rotation
+        if(rotation!=0.0) {cimg_library::cimg::tic();std::cerr<<"information: rotate image by "<<rotation<<" degree angle: "<<std::flush;visu=image[0].get_rotate(90);cimg_library::cimg::toc();}
+        else visu=image[0];
         //display
-        visu.assign(image[0].width(),image[0].height(),1,3);
-        visu=image[0];
         title="live ";title+=progress[prog];if(++prog>progress.size()-1) prog=0;
         live_display.set_title(title.c_str()).display(visu);
         //checks
