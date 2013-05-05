@@ -102,7 +102,8 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   const std::string ImagePath=cimg_option("-o","image_%03d.cimg","path for image(s) (e.g. image_%03d.cimg for image_000.cimg).");
   const std::string TemporaryImagePath=cimg_option("-t","tmp_image.jpg","temporary path for image(s) (e.g. image_%05d.imx for image_000001.imx (using LaVision/DaVis) or tmp_image.jpg using Elphel).");
   const bool display=cimg_option("-X",true,"display image and graph (e.g. -X false for no display).");
-  const bool continuous_display=cimg_option("-c",true,"continuous image display (i.e. live display).");
+  const bool continuous_display=cimg_option("--continuous",true,"continuous image display (i.e. live display).");
+  const bool reduce_display=cimg_option("--reduce",true,"reduce image and live display it.");
     ///stop if help requested
   if(show_help) {/*print_help(std::cerr);*/return 0;}
 //grab device object
@@ -113,15 +114,22 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
   if(!pGrab->open(DevicePath)) return 1;
 //get
 //! \todo [low] _ part of grab single
-  cimg_library::CImgList<int> image(2);//index: 0 current, 1 previous
-  //int ymax=0;
-  //cimg_library::CImg<int> profile;
-  //cimg_library::CImg<float> mean;
-  //cimg_library::CImg<int> min;
-  //cimg_library::CImg<int> max;
+  cimg_library::CImgList<int> image(2);//index: 0 current, 1 previous; (x,y) size
+  //image file name (output)
   std::string file;file.reserve(ImagePath.size()+64);
+  //reduce
+  cimg_library::CImg<int> reduce;//(x) size
+  cimg_library::CImg<int> profile;//(x) size
+  cimg_library::CImg<unsigned char> graph;//(x,1,1,3) size
+  ///graph colors
+  cimg_library::CImg<unsigned char> palette(3,4,1,1, 0);//(RGB,c)
+  palette(0,0)=255;//red   (255,0,0)
+  palette(1,1)=255;//green (0,255,0)
+  palette(2,2)=255;//blue  (0,0,255)
+  //palette(?,3)=0;//black (0,0,0)
 //display
-  cimg_library::CImg<unsigned char> visu;
+  cimg_library::CImg<int> to_display;//shared image: either image or reduce
+  cimg_library::CImg<unsigned char> visu;//either normal(x,y) or reduce_profile(x,h) sizes
   cimg_library::CImgDisplay live_display;std::string title;title.reserve(128);std::string progress="-\\|/";int prog=0;
 //! \todo [low] _ do the same with sequence framework of Cgrab, so have 2 possibilities for grabing a mean image.
   for(int i=0;i<ImageNumber;++i)
@@ -151,54 +159,48 @@ pGrab->temporary_image_index++;//DaVis and AandDEE reset
     //display 2D image
     if(display)
     {
+      if(reduce_display)
+      {
+        //reduce along y direction
+        reduce.assign(image[0].width());
+        cimg_forXY(image[0],x,y)
+        {
+          reduce(x)+=image[0](x,y);
+        }
+        //create profil
+        profile.assign(reduce.width(),1,1,3, 0);
+        profile.draw_image(0,0,0,0,reduce);//R
+        //draw graph(s)
+        const int height=256;
+        graph.assign(profile.width(),height,1,3, 255);//white background
+        //graph.draw_grid(-10,-10,0,0,false,true,palette(0,3)/*black*/,0.2f,0x33333333,0x33333333);
+        cimg_forC(profile,c) graph.draw_graph(profile.get_shared_channel(c),&palette(0,c));//,1,plot_type,vertex_type,nymax,nymin,false);
+        //set what to display
+        to_display=graph.get_shared();
+      }//reduce
+      else
+        //set what to display
+        to_display=image[0].get_shared();
+
       if(continuous_display)
       {
         //display
-        visu.assign(image[0].width(),image[0].height(),1,3);
-        visu=image[0];
+        visu.assign(to_display.width(),to_display.height(),1,3);
+        visu=to_display;
         title="live ";title+=progress[prog];if(++prog>progress.size()-1) prog=0;
         live_display.set_title(title.c_str()).display(visu);
         //checks
         if(live_display.is_closed()||live_display.is_keyESC()||live_display.is_keyQ()) ImageNumber=-1;//exit
-        if(live_display.is_keyS()||live_display.is_keyP()) {image[0].display("grab Stopped/Paused");live_display.set_key();}//stop and display values
+        if(live_display.is_keyS()||live_display.is_keyP()) {to_display.display("grab Stopped/Paused");live_display.set_key();}//stop and display values
         i=0;//loop forever
-      }
-      else image[0].display(file.c_str());
+      }//continuous
+      else to_display.display(file.c_str());
     }
-/*
-    if(i==0)
-    {//search maximum for first image only
-      cimg_library::CImg<float> stat=image[0].get_stats();
-      ymax=stat[9];
-    }//max
-    profile=image[0].get_crop(0,ymax,image[0].width()-1,ymax);//.get_line(ymax);
-    if(i==0)
-    {
-      min=max=mean=profile;
-    }
-    else
-    {
-      mean+=profile;
-      min=profile.get_min(min);
-      max=profile.get_max(max);
-    }
-*/
     if(!continuous_display) if(!pGrab->temporary_image_path.empty()) image[0].save(file.c_str());//use temporary image, so save final record
     //copy current to previous for next loop (i.e. fast swap previous/current)
 //! \todo [low] _ part of grab single
     image[1].swap(image[0]);
   }//done
-/*
-  //mean
-  mean/=ImageNumber;
-//display last 2D image
-  image.display(file.c_str());
-//display 1D profile on maximum along x
-  profile.display_graph(file.c_str());
-  mean.display_graph("mean");
-  min.display_graph("min");
-  max.display_graph("max");
-*/
 //close
   pGrab->close();
   return 0;
