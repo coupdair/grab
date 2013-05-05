@@ -112,6 +112,7 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
 //open
   if(!pGrab->open(DevicePath)) return 1;
 //get
+//! \todo [low] _ part of grab single
   cimg_library::CImgList<int> image(2);//index: 0 current, 1 previous
   //int ymax=0;
   //cimg_library::CImg<int> profile;
@@ -128,6 +129,7 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
     pGrab->image_file_name(file,ImagePath,i);
 pGrab->temporary_image_index++;//DaVis and AandDEE reset
     //get next image with check (i.e. grab single time image)
+//! \todo [low] _ grab single should be integrated to wget class, only (or it could be a check for all, i.e. function in base class, but could be a grab_check function in all the other classes too).
     int loop=false;
     do
     {//get next image with check (i.e. grab single time image)
@@ -183,6 +185,7 @@ pGrab->temporary_image_index++;//DaVis and AandDEE reset
 */
     if(!continuous_display) if(!pGrab->temporary_image_path.empty()) image[0].save(file.c_str());//use temporary image, so save final record
     //copy current to previous for next loop (i.e. fast swap previous/current)
+//! \todo [low] _ part of grab single
     image[1].swap(image[0]);
   }//done
 /*
