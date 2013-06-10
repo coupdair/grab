@@ -145,6 +145,7 @@ pGrab->temporary_image_index++;//DaVis and AandDEE reset
       if(loop) std::cerr<<"\n\nget next image (i.e. reload)\n\n"<<std::flush;
       if(!pGrab->grab(image[0],file.c_str())) return 1;//might use temporary image
       image[0].channel(0);//set to grey level, only
+image[0].resize(-50,-50,-100,-100,2);
       //check
       if(image[1].is_empty())
       {//first loop
@@ -157,6 +158,8 @@ pGrab->temporary_image_index++;//DaVis and AandDEE reset
         cimg_for_inXY(image[0],1,1,4,4,x,y) if(image[0](x,y)==image[1](x,y)) loop=true; else loop=false;//loop on 3x3 pixel
       }
     }while(loop);
+//correct camera on the side
+image[0].rotate(90);
     //display 2D image
     if(display)
     {
@@ -188,10 +191,14 @@ pGrab->temporary_image_index++;//DaVis and AandDEE reset
 
       if(continuous_display)
       {
+        std::ostringstream stream;
+        stream<<image[0].max();
+//        stream<<(image[0].get_blur(2)).max();
+//image[0].print("########################0##################");
         //display
         visu.assign(to_display.width(),to_display.height(),1,3);
         visu=to_display;
-        title="live ";title+=progress[prog];if(++prog>progress.size()-1) prog=0;
+        title="live "+DevicePath+" ";title+=progress[prog];title+=stream.str();if(++prog>progress.size()-1) prog=0;
         live_display.set_title(title.c_str()).display(visu);
         //checks
         if(live_display.is_closed()||live_display.is_keyESC()||live_display.is_keyQ()) ImageNumber=-1;//exit
