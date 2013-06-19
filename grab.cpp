@@ -114,7 +114,7 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
 //open
   if(!pGrab->open(DevicePath)) return 1;
 //get
-//! \todo [low] _ part of grab single
+//! \todo [grab/low] _ part of grab single
   cimg_library::CImgList<int> image(2);//index: 0 current, 1 previous; (x,y) size
   //image file name (output)
   std::string file;file.reserve(ImagePath.size()+64);
@@ -138,14 +138,16 @@ version: "+std::string(GRAB_VERSION)+"\n compilation date: " \
     pGrab->image_file_name(file,ImagePath,i);
 pGrab->temporary_image_index++;//DaVis and AandDEE reset
     //get next image with check (i.e. grab single time image)
-//! \todo [low] _ grab single should be integrated to wget class, only (or it could be a check for all, i.e. function in base class, but could be a grab_check function in all the other classes too).
+//! \todo [grab/low] _ grab single should be integrated to wget class, only (or it could be a check for all, i.e. function in base class, but could be a grab_check function in all the other classes too).
     int loop=false;
     do
     {//get next image with check (i.e. grab single time image)
       if(loop) std::cerr<<"\n\nget next image (i.e. reload)\n\n"<<std::flush;
       if(!pGrab->grab(image[0],file.c_str())) return 1;//might use temporary image
       image[0].channel(0);//set to grey level, only
-image[0].resize(-50,-50,-100,-100,2);
+//! \todo [grab/low] setup zoom from command line
+//! \todo [grab/low] setup cut  from command line
+//image[0].resize(-50,-50,-100,-100,2);
       //check
       if(image[1].is_empty())
       {//first loop
@@ -154,12 +156,14 @@ image[0].resize(-50,-50,-100,-100,2);
       }
       else
       {//check if any pixel value difference
+//! \todo [grab/low] setup check same image with plugin and choose from command line
         //cimg_forXY(image[0],x,y) if(image[0](x,y)==image[1](x,y)) loop=true; else loop=false;//loop on entire image
         cimg_for_inXY(image[0],1,1,4,4,x,y) if(image[0](x,y)==image[1](x,y)) loop=true; else loop=false;//loop on 3x3 pixel
       }
     }while(loop);
 //correct camera on the side
-image[0].rotate(90);
+//! \todo [low] setup rotation from command line
+//image[0].rotate(90);
     //display 2D image
     if(display)
     {
@@ -209,7 +213,7 @@ image[0].rotate(90);
     }
     if(!continuous_display) if(!pGrab->temporary_image_path.empty()) image[0].save(file.c_str());//use temporary image, so save final record
     //copy current to previous for next loop (i.e. fast swap previous/current)
-//! \todo [low] _ part of grab single
+//! \todo [grab/low] _ part of grab single
     image[1].swap(image[0]);
   }//done
 //close
