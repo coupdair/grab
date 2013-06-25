@@ -15,7 +15,8 @@
 
 //serial needed for AandDEE, only.
 #include "../rs232/serial_factory.h"
-
+//! \todo add Ximea grab class
+//! \todo add V4L2loopBack grab class
 class Cgrab
 {
 public:
