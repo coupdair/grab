@@ -196,9 +196,11 @@ pGrab->temporary_image_index++;//DaVis and AandDEE reset
       if(continuous_display)
       {
         std::ostringstream stream;
-        stream<<image[0].max();
-//        stream<<(image[0].get_blur(2)).max();
-//image[0].print("########################0##################");
+        stream<<" "<<to_display.min()<<"< ";
+        stream<<to_display.mean();
+        stream<<" <"<<to_display.max();
+//        stream<<(to_display.get_blur(2)).max();
+//to_display.print("########################0##################");
         //display
         visu.assign(to_display.width(),to_display.height(),1,3);
         visu=to_display;

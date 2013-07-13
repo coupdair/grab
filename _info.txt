@@ -22,6 +22,10 @@ ncview image.nc &
 for((;;)); do rsync -var 134.206.140.76:/cygwin/d/image/image_?????.imx ./image/ ; done
 ./grab -o image_%03d.cimg -t ./image/image_%05d.imx --device-type grab_AandDEE_serial --device-path /dev/ttyUSB0 -X false -n 10
 
+#image information
+exiftool -a -u -g1 bimg.jpg
+./grab --device-type grab_WGet --device-path 192.168.0.9 --reduce false --continuous false -X false -o image_%03d.jpg
+for f in image_???.jpg; do exiftool -a -u -g1 $f | grep Date | tail -n 1; done
 
 #test wait for image file
 rm *.imx *.cimg; ./link_imx.sh & ./grab -o image_%03d.cimg -t image_%05d.imx -X false -n 19

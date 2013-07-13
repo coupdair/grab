@@ -1,7 +1,7 @@
 PROGRAMS = version lavision grab  
 DOCUMENTATIONS = doc
 
-version = v0.2.1.dev
+version = v0.2.2
 #version_cimg = 125
 version_cimg = 149
 version_rs232=`cat ../rs232/VERSION`

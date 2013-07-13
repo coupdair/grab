@@ -15,8 +15,8 @@
 
 //serial needed for AandDEE, only.
 #include "../rs232/serial_factory.h"
-//! \todo add Ximea grab class
-//! \todo add V4L2loopBack grab class
+//! \todo [Ximea]  add xiAPI grab class
+//! \todo [Elphel] add V4L2loopBack grab class
 class Cgrab
 {
 public:
@@ -301,14 +301,14 @@ std::cerr<<"error: bad file name extention (should be .JPG, but \""<<temporary_i
   {
 #if cimg_debug>1
 std::cerr<<class_name<<"::"<<__func__<<": use system command execution (i.e. std::system() )\n"<<std::flush;
-#endif
+#endif //cimg_debug
     ///file name
     std::string file;
 #if version_cimg < 130
     const char *ext = cimg_library::cimg::filename_split(image_path.c_str());
 #else
     const char *ext = cimg_library::cimg::split_filename(image_path.c_str());
-#endif
+#endif //version_cimg
     if(!cimg_library::cimg::strncasecmp(ext,"jpg",3))
     {//save native image (.JPG)
       file=image_path;//e.g. .JPG
